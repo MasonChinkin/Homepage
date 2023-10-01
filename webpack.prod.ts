@@ -3,6 +3,8 @@ import { Configuration } from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { GenerateSW } from 'workbox-webpack-plugin'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const config: Configuration = {
   mode: 'production',
   entry: './src/index.tsx',
@@ -29,32 +31,53 @@ const config: Configuration = {
       },
     ],
   },
+  externals: {
+    react: 'React',
+    'react-dom': 'ReactDOM',
+    bootstrap: 'bootstrap',
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: './public/index.base.html',
+      filename: 'index.html',
       hash: true,
+      templateParameters: {
+        react: isProduction
+          ? 'https://unpkg.com/react@18.2.0/umd/react.production.min.js'
+          : 'https://unpkg.com/react@18.2.0/umd/react.development.js',
+        reactDom: isProduction
+          ? 'https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js'
+          : 'https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js',
+        bootstrap: isProduction
+          ? 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
+          : 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.js',
+      },
     }),
     new GenerateSW({
       maximumFileSizeToCacheInBytes: 5000000,
       runtimeCaching: [
         {
           urlPattern: ({ url }) => {
-            const alwaysCache = [
+            const fonts = [
               'https://use.fontawesome.com/releases/v5.7.0/css/all.css',
               'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
               'https://fonts.googleapis.com/icon?family=Material+Icons',
               'https://fonts.googleapis.com/css?family=Roboto',
             ]
 
-            if (alwaysCache.includes(url.toString())) {
+            if (fonts.includes(url.toString())) {
+              return true
+            }
+
+            if (url.toString().includes('bundle.js?')) {
               return true
             }
 
             return false
           },
-          handler: 'StaleWhileRevalidate',
+          handler: 'CacheFirst',
           options: {
-            cacheName: 'StaleWhileRevalidate_Cache',
+            cacheName: 'CacheFirst_Cache',
             expiration: {
               maxAgeSeconds: 24 * 60 * 60 * 60,
               purgeOnQuotaError: true,

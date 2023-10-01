@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel="icon" href="/public/favicon.ico" />
 
     <!-- ICONS -->
     <link
@@ -34,10 +35,18 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="logo192.png" />
+
+    <link rel="preload" href="<%= react %>" as="script" />
+    <link rel="preload" href="<%= reactDom %>" as="script" />
+    <link rel="preload" href="<%= bootstrap %>" as="script" />
+
     <title>Mason's Website</title>
   </head>
 
   <body>
     <div id="root"></div>
+    <script src="<%= react %>"></script>
+    <script src="<%= reactDom %>"></script>
+    <script src="<%= bootstrap %>"></script>
   </body>
 </html>
