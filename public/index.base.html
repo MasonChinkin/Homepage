@@ -2,9 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/public/favicon.ico" />
 
     <!-- ICONS -->
+    <link
+      rel="preload"
+      href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+      integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+      crossorigin="anonymous"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      as="style"
+    />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      as="style"
+    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
@@ -16,15 +32,20 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
     />
     <!-- ICONS -->
 
     <!-- FONTS -->
     <link
+      rel="preload"
       href="https://fonts.googleapis.com/css?family=Roboto"
+      as="'style"
+    />
+    <link
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto"
     />
     <!-- FONTS -->
 
@@ -36,17 +57,26 @@
     />
     <link rel="apple-touch-icon" href="logo192.png" />
 
-    <link rel="preload" href="<%= react %>" as="script" />
-    <link rel="preload" href="<%= reactDom %>" as="script" />
-    <link rel="preload" href="<%= bootstrap %>" as="script" />
+    <link rel="preload" href="<%= ReactUrl %>" as="script" />
+    <link rel="preload" href="<%= ReactDOMUrl %>" as="script" />
+    <link rel="preload" href="<%= bootstrapUrl %>" as="script" />
+    <link
+      rel="preload"
+      href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      as="style"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
 
     <title>Mason's Website</title>
   </head>
 
   <body>
     <div id="root"></div>
-    <script src="<%= react %>"></script>
-    <script src="<%= reactDom %>"></script>
-    <script src="<%= bootstrap %>"></script>
+    <script src="<%= ReactUrl %>"></script>
+    <script src="<%= ReactDOMUrl %>"></script>
+    <script src="<%= bootstrapUrl %>"></script>
   </body>
 </html>

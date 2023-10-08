@@ -1,11 +1,11 @@
 import FeaturedProjectItem from './FeaturedProjectItem'
-import { d3Projects, otherProjects } from '../../projects/projectList'
+import { d3Projects } from '../../projects/projectList'
 
 const Featured = () => {
   const featuredProjects = [
     d3Projects[0], // redditVisualization
     d3Projects[1], // federalBudgetSankey
-    otherProjects[0], // availableFlatSurface
+    d3Projects[2], // syria network
   ]
 
   const featuredProjectsTiles: JSX.Element[] = featuredProjects.map(

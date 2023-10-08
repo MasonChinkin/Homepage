@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import classNames from 'classnames'
-import { projectType } from './projectList'
+import { ProjectType } from './projectList'
 
 type ProjectGridItemProps = {
-  project: projectType
+  project: ProjectType
 }
 
 const ProjectGridItem = ({ project }: ProjectGridItemProps) => {

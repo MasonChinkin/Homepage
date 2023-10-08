@@ -4,7 +4,6 @@ import Header from './header/Header'
 import Background from './Background'
 import Home from './home/Home'
 import D3ProjectGrid from './projects/D3ProjectGrid'
-import OtherProjectGrid from './projects/OtherProjectGrid'
 import About from './about/About'
 
 type RouteObj = {
@@ -17,7 +16,6 @@ const App = () => {
     { path: '/', element: <Home /> },
     { path: '/about', element: <About /> },
     { path: '/d3', element: <D3ProjectGrid /> },
-    { path: '/other', element: <OtherProjectGrid /> },
   ]
 
   const location = useLocation()

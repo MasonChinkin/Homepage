@@ -41,12 +41,6 @@ const Header = () => {
         >
           D3 Projects
         </NavLink>
-        <NavLink
-          to="/other"
-          className={({ isActive }) => (isActive ? 'selected' : '')}
-        >
-          Other Projects
-        </NavLink>
       </section>
     </header>
   )

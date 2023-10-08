@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import classNames from 'classnames'
+import aboutMeImg from '../../images/about_me.png'
+import aboutMeMobileImg from '../../images/about_me_mobile.png'
+import { isPhone } from '../../utils/device'
 
 const AboutImg = () => {
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
-  const isPhone: boolean = window.innerWidth <= 450
 
   const imgClasses = classNames('about-img', {
     'loading-img': !imgLoaded,
@@ -13,7 +15,7 @@ const AboutImg = () => {
     <img
       className={imgClasses}
       onLoad={() => setImgLoaded(true)}
-      src={isPhone ? 'images/about_me_mobile.png' : 'images/about_me.png'}
+      src={isPhone ? aboutMeMobileImg : aboutMeImg}
       alt="Me liking food"
     />
   )

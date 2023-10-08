@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import classNames from 'classnames'
-import { projectType } from '../../projects/projectList'
+import { ProjectType } from '../../projects/projectList'
+import { isPhone } from '../../../utils/device'
 
 type FeaturedProjectItemProps = {
-  project: projectType
+  project: ProjectType
 }
 
 const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
-  const { img, gif, title, description, liveLink } = project
+  const { img, webp, title, description, liveLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
-  const isPhone: boolean = window.innerWidth <= 450
 
   const imgClasses = classNames('featured-project-item-img', {
     'loading-img': !imgLoaded,
+    'featured-project-item-img-hover': !!webp,
   })
 
   return (
@@ -31,9 +32,9 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
         />
         {!isPhone && (
           <img
-            className="featured-project-item-gif"
-            src={gif}
-            alt="project gif"
+            className="featured-project-item-webp"
+            src={webp}
+            alt="project webp"
           />
         )}
         <div className="featured-project-caption">
