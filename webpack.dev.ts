@@ -11,6 +11,7 @@ const config = merge(prod, {
     compress: true,
     port: 8000,
     open: true,
+    historyApiFallback: true,
   },
 })
 

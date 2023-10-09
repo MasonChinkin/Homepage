@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import ReactCSSTransitionReplace from 'react-css-transition-replace'
 import Header from './header/Header'
 import Background from './Background'
@@ -16,6 +16,7 @@ const App = () => {
     { path: '/', element: <Home /> },
     { path: '/about', element: <About /> },
     { path: '/d3', element: <D3ProjectGrid /> },
+    { path: '/*', element: <Navigate to="/" /> },
   ]
 
   const location = useLocation()
