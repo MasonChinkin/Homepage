@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
-import './styles/index.scss'
 import Root from './Root'
+import './styles/index.scss'
 
 const domNode = document.getElementById('root')!
 const root = createRoot(domNode)

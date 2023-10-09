@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
-import { ProjectType } from '../../projects/projectList'
 import { isPhone } from '../../../utils/device'
+import { ProjectType } from '../../projects/projectList'
 
 type FeaturedProjectItemProps = {
   project: ProjectType

@@ -1,5 +1,5 @@
-import FeaturedProjectItem from './FeaturedProjectItem'
 import { d3Projects } from '../../projects/projectList'
+import FeaturedProjectItem from './FeaturedProjectItem'
 
 const Featured = () => {
   const featuredProjects = [

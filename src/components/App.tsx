@@ -1,10 +1,10 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import ReactCSSTransitionReplace from 'react-css-transition-replace'
-import Header from './header/Header'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Background from './Background'
+import About from './about/About'
+import Header from './header/Header'
 import Home from './home/Home'
 import D3ProjectGrid from './projects/D3ProjectGrid'
-import About from './about/About'
 
 type RouteObj = {
   path: string

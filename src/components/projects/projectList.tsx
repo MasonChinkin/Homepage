@@ -1,11 +1,11 @@
-import redditImg from '../../images/reddit-visualization.png'
+import budgetSankeyWebp from '../../animated/budget-sankey.webp'
 import redditWebp from '../../animated/reddit-visualization.webp'
 import budgetSankeyImg from '../../images/budget-dashboard.jpg'
-import budgetSankeyWebp from '../../animated/budget-sankey.webp'
-import networkImg from '../../images/network.png'
-import forceClustersImg from '../../images/force-clusters.png'
 import congressMapImg from '../../images/congress-map.png'
+import forceClustersImg from '../../images/force-clusters.png'
 import gdpImg from '../../images/gdp.png'
+import networkImg from '../../images/network.png'
+import redditImg from '../../images/reddit-visualization.png'
 
 export type ProjectType = {
   img: string

@@ -1,8 +1,8 @@
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
 import { Configuration } from 'webpack'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { getExternals, getTemplateParameters } from './externalizedLibs'
 import { GenerateSW } from 'workbox-webpack-plugin'
+import { getExternals, getTemplateParameters } from './externalizedLibs'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
