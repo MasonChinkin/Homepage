@@ -41,5 +41,5 @@
       }
     ]
   },
-  "ignorePatterns": [".eslintrc.js"]
+  "ignorePatterns": [".eslintrc.js", "bun.lockb", "*.json"]
 }
