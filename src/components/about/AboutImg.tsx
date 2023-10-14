@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import classNames from 'classnames'
-import aboutMeImg from '../../static/images/about_me.png'
-import aboutMeMobileImg from '../../static/images/about_me_mobile.png'
-import { isPhone } from '../../utils/device'
+import aboutMeImg from 'src/static/images/about_me.png'
+import aboutMeMobileImg from 'src/static/images/about_me_mobile.png'
+import { isPhone } from 'src/utils/device'
 
 const AboutImg = () => {
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)

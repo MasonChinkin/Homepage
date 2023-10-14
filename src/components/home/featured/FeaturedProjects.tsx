@@ -1,4 +1,4 @@
-import { d3Projects } from '../../projects/projectList'
+import { d3Projects } from 'src/components/projects/projectList'
 import FeaturedProjectItem from './FeaturedProjectItem'
 
 const Featured = () => {

@@ -1,5 +1,6 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { Configuration } from 'webpack'
 import { GenerateSW } from 'workbox-webpack-plugin'
 import { getExternals, getTemplateParameters } from './externalizedLibs'
@@ -59,6 +60,7 @@ const config: Configuration = {
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
+    plugins: [new TsconfigPathsPlugin()],
     extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp', '.svg'],
   },
   module: {

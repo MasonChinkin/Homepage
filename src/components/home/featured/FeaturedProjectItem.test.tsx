@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import { d3Projects } from '../../projects/projectList'
+import { d3Projects } from 'src/components/projects/projectList'
 import FeaturedProjectItem from './FeaturedProjectItem'
 
 const project = d3Projects[0]

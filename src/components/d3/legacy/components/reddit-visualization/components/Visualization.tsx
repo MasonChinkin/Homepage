@@ -1,4 +1,4 @@
-import bubbleChart from '../../../../../../static/images/bubble-chart.svg'
+import bubbleChart from 'src/static/images/bubble-chart.svg'
 import Tooltip from './Tooltip'
 
 const Visualization = () => {

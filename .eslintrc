@@ -10,7 +10,7 @@
     "plugin:import/typescript",
     "prettier"
   ],
-  "plugins": ["react"],
+  "plugins": ["react", "no-relative-import-paths"],
   "parserOptions": {
     "ecmaVersion": 2022,
     "ecmaFeatures": {
@@ -31,7 +31,8 @@
           ".webp",
           ".svg"
         ]
-      }
+      },
+      "typescript": {}
     },
     "react": {
       "version": "detect"
@@ -50,6 +51,10 @@
         "namedComponents": "arrow-function",
         "unnamedComponents": "arrow-function"
       }
+    ],
+    "no-relative-import-paths/no-relative-import-paths": [
+      "error",
+      { "allowSameFolder": true }
     ]
   },
   "ignorePatterns": [".eslintrc.js", "bun.lockb", "*.json"]
