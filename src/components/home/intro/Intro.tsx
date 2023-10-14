@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import classNames from 'classnames'
-import avatarImg from '../../../images/avatar.jpg'
+import avatarImg from '../../../static/images/avatar.jpg'
 
 const Intro = () => {
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)

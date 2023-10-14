@@ -1,0 +1,27 @@
+.legacy {
+  .bubble {
+    cursor: pointer;
+
+    &:hover {
+      stroke: black;
+      stroke-width: 2px;
+    }
+  }
+
+  .legend-circle {
+    fill: rgb(199, 230, 255);
+    stroke: steelblue;
+  }
+
+  .legend-label {
+    fill: black;
+    font-size: 12px;
+    text-anchor: middle;
+  }
+
+  .legend-header {
+    font-size: 1.3rem;
+    pointer-events: none;
+    text-anchor: middle;
+  }
+}

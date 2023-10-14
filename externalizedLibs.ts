@@ -32,6 +32,14 @@ export const externalizedLibs: ExternalizedLibs = {
         ? 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
         : 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.js',
   },
+  d3: {
+    id: 'd3',
+    name: 'd3',
+    getUrl: (isProduction) =>
+      isProduction
+        ? 'https://unpkg.com/d3@6.7.0/dist/d3.min.js'
+        : 'https://unpkg.com/d3@6.7.0/dist/d3.js',
+  },
 }
 
 export const getExternals = (): Record<string, string> =>

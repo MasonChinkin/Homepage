@@ -59,7 +59,7 @@ const config: Configuration = {
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp'],
+    extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp', '.svg'],
   },
   module: {
     rules: [
