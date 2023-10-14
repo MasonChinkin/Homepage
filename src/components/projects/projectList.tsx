@@ -24,7 +24,7 @@ export const d3Projects: ProjectType[] = [
     title: 'Reddit Visualization',
     description:
       "Fun visualization of the data fetched by putting '.json' at the end of most reddit URLs.",
-    internalLink: '/legacy/reddit-visualization',
+    internalLink: '/reddit-visualization',
     githubLink: 'https://github.com/MasonChinkin/d3-projects',
   },
   {
@@ -33,7 +33,7 @@ export const d3Projects: ProjectType[] = [
     title: 'Federal Budget Sankey',
     description:
       'Sankeys were underutilized as a tool to communicate fiscal policy.',
-    internalLink: '/legacy/federal-budget-sankey',
+    internalLink: '/federal-budget-sankey',
     githubLink: 'https://github.com/MasonChinkin/budgetSankey',
   },
   {

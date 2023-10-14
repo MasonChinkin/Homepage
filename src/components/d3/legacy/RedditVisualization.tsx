@@ -13,7 +13,7 @@ const RedditVisualization = () => {
 
   return (
     <div className="legacy">
-      <Header title="Federal Budget Sankey" />
+      <Header title="Reddit Visualization" />
       <main>
         <Instructions />
         <Inputs />
