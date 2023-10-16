@@ -48,15 +48,6 @@ const MobileContact = () => {
             </a>
           </Button>
           <Button variant="outline-primary">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://twitter.com/MChinkin"
-            >
-              <i className="fab fa-twitter" /> <span>Twitter</span>
-            </a>
-          </Button>
-          <Button variant="outline-primary">
             <a target="_blank" rel="noopener noreferrer" href={mailTo}>
               <i className="fas fa-envelope" /> <span>Email</span>
             </a>
