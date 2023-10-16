@@ -1,9 +1,6 @@
 const Tooltip = () => {
   return (
     <div id="tooltip" className="hidden">
-      <h1>
-        <span id="Subreddit">xxx</span>
-      </h1>
       <h2>
         Title: <span id="Title">xxx</span>
       </h2>

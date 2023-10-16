@@ -9,8 +9,6 @@ const postTimeFormat = d3.timeFormat('%B %d %I:%M%p')
 
 // properties of mousemove
 export const barMouseMove = (event, d) => {
-  d3.select('#Subreddit').text(d.subreddit)
-
   d3.select('#Title').text(d.title)
 
   d3.select('#Posted').text(postTimeFormat(new Date(d.createdString)))
