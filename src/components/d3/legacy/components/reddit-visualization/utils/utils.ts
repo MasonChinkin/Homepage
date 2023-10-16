@@ -1,3 +1,6 @@
+// This is early career code. Plz don't judge :)
+// eslint-disable-next-line
+// @ts-nocheck
 import * as d3 from 'd3'
 
 // function to only include urls that can be previewed (jpgs)

@@ -1,4 +1,20 @@
+// This is early career code. Plz don't judge :)
+// eslint-disable-next-line
+// @ts-nocheck
 import { usableUrl, catchErrors, redraw, subredditNotFound } from './utils'
+
+function getURL() {
+  const subreddit = document.getElementById('subreddit-input').value
+  const sort = document.getElementById('sort-input').value
+  const dateRange = document.getElementById('date-range').value
+
+  let url = `https://www.reddit.com/r/${subreddit}/${sort}.json`
+  if (sort === 'top') {
+    url += `?t=${dateRange}`
+  }
+
+  return url
+}
 
 export async function visualize(vizType) {
   let dataset
@@ -23,7 +39,7 @@ export async function visualize(vizType) {
     dataset = []
 
     const dataCount = window.innerWidth <= 768 ? 10 : 20
-    for (let i = 0; i < dataCount; i++) {
+    for (let i = 0; i < dataCount; i += 1) {
       dataset.push({
         id: json.data.children[i].data.id,
         ups: json.data.children[i].data.ups,
@@ -56,17 +72,4 @@ export async function visualize(vizType) {
 
   redraw(dataset, vizType)
   window.addEventListener('resize', () => redraw(dataset, vizType))
-}
-
-function getURL() {
-  const subreddit = document.getElementById('subreddit-input').value
-  const sort = document.getElementById('sort-input').value
-  const dateRange = document.getElementById('date-range').value
-
-  let url = `https://www.reddit.com/r/${subreddit}/${sort}.json`
-  if (sort === 'top') {
-    url += `?t=${dateRange}`
-  }
-
-  return url
 }

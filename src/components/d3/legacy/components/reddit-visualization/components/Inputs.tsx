@@ -1,13 +1,14 @@
+import { ChangeEventHandler } from 'react'
+
 const Inputs = () => {
   // NOTE: This is old code ported to react. Forgive me!
-  const handleSuggestionClick = (e) => {
-    const val = e.target.value
-    const input = document.getElementById('subreddit-input')
+  const handleSuggestionClick: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const input = document.getElementById('subreddit-input') as HTMLInputElement
 
-    input.value = val
+    input.value = e?.target.value
     sessionStorage.clear() // onchange isn't triggering consistenty in #subreddit-input
 
-    const select = document.getElementById('suggestions')
+    const select = document.getElementById('suggestions') as HTMLInputElement
     select.value = 'Suggestions'
   }
 
