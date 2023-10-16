@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import Footer from './Footer'
+import 'src/components/d3/legacy/styles/globals.scss'
 import Header from './Header'
 import Inputs from './components/reddit-visualization/components/Inputs'
 import Instructions from './components/reddit-visualization/components/Instructions'
@@ -19,7 +19,6 @@ const RedditVisualization = () => {
         <Inputs />
         <Visualization />
       </main>
-      <Footer />
     </div>
   )
 }

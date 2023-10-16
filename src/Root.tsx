@@ -9,10 +9,10 @@ const Root = () => {
       <Routes>
         <Route path="/*" element={<Profile />} />
         <Route path="/reddit-visualization" element={<RedditVisualization />} />
-        <Route
+        {/* <Route
           path="/federal-budget-sankey"
           element={<FederalBudgetSankey />}
-        />
+        /> */}
       </Routes>
     </BrowserRouter>
   )

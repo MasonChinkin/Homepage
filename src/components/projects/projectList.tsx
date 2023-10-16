@@ -27,15 +27,15 @@ export const d3Projects: ProjectType[] = [
     internalLink: '/reddit-visualization',
     githubLink: 'https://github.com/MasonChinkin/d3-projects',
   },
-  {
-    img: budgetSankeyImg,
-    webp: budgetSankeyWebp,
-    title: 'Federal Budget Sankey',
-    description:
-      'Sankeys were underutilized as a tool to communicate fiscal policy.',
-    internalLink: '/federal-budget-sankey',
-    githubLink: 'https://github.com/MasonChinkin/budgetSankey',
-  },
+  // {
+  //   img: budgetSankeyImg,
+  //   webp: budgetSankeyWebp,
+  //   title: 'Federal Budget Sankey',
+  //   description:
+  //     'Sankeys were underutilized as a tool to communicate fiscal policy.',
+  //   internalLink: '/federal-budget-sankey',
+  //   githubLink: 'https://github.com/MasonChinkin/budgetSankey',
+  // },
   {
     img: networkImg,
     title: 'The Diplomatic Web in Syria',

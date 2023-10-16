@@ -1,7 +1,8 @@
 .legacy {
-  body {
-    background: rgb(210, 220, 230);
-    font-family: 'Roboto', sans-serif;
+  background: rgb(210, 220, 230);
+
+  * {
+    color: black;
   }
 
   header {
@@ -11,14 +12,15 @@
     flex-direction: column;
     justify-content: space-evenly;
     margin-bottom: 5px;
-    padding: 10px 0;
     position: relative;
+    padding: 10px;
 
     > h1 {
       font-size: 28px;
+      margin-bottom: 0;
     }
 
-    > a {
+    > button {
       left: 10px;
       padding: 10px;
       position: absolute;
@@ -53,15 +55,6 @@
     }
   }
 
-  footer {
-    > a {
-      bottom: 0;
-      color: white;
-      font-size: 1px;
-      position: fixed;
-    }
-  }
-
   main {
     align-items: center;
     display: flex;
@@ -76,20 +69,21 @@
     h1 {
       font-size: 16px;
       font-weight: 500;
-      margin-bottom: 4px;
+      margin-bottom: 10px;
     }
 
     ul {
       display: flex;
       flex-direction: column;
       font-weight: 300;
-    }
+      margin-right: 16px;
+      margin-bottom: 0;
 
-    li {
-      font-size: 16px;
-      list-style-type: square;
-      margin-bottom: 3px;
-      margin-left: 22px;
+      li {
+        font-size: 16px;
+        list-style-type: square;
+        margin-bottom: 3px;
+      }
     }
 
     @include tablet {
@@ -102,7 +96,6 @@
         font-size: 12px;
         list-style-type: square;
         margin-bottom: 3px;
-        margin-left: 22px;
       }
     }
   }

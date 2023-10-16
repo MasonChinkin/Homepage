@@ -1,4 +1,3 @@
-import Footer from './Footer'
 import Header from './Header'
 import Instructions from './components/federal-budget-sankey/Instructions'
 import sankeyData from './components/federal-budget-sankey/utils/sankeyData.json'
@@ -14,7 +13,6 @@ const FederalBudgetSankey = () => {
           Cool stuff
         </main>
       </sankeyDataContext.Provider>
-      <Footer />
     </div>
   )
 }
