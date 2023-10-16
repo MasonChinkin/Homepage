@@ -5,6 +5,7 @@ const config: Config = {
   testEnvironment: 'jsdom',
   maxWorkers: '50%',
   moduleNameMapper: {
+    '^src/(.*)$': '<rootDir>/src/$1',
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2|webp)$':
       'identity-obj-proxy',
   },
