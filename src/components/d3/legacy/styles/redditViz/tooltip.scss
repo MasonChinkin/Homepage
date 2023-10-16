@@ -17,37 +17,32 @@
     position: absolute;
     width: 300px;
     z-index: 2;
+    text-align: center;
 
-    > * {
-      margin-bottom: 10px;
+    > h2 {
+      margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: 500;
+
+      > span {
+        font-weight: 300;
+      }
     }
 
-    &:last-child {
-      margin-bottom: none;
+    h1 {
+      color: black;
+      font-size: 20px;
+      font-weight: 600;
     }
   }
 
-  #tooltip.hidden {
+  .hidden {
     display: none;
   }
 
-  #tooltip h1 {
-    color: black;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  #tooltip h2 {
-    font-size: 16px;
-    font-weight: 500;
-
-    > span {
-      font-weight: 300;
-    }
-  }
-
   #pic {
-    width: 100%;
+    max-width: 100%;
+    max-height: 300px;
   }
 
   .no-image {
