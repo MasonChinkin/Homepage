@@ -6,7 +6,7 @@ const MobileContact = () => {
 
   const email = 'mason.chinkin@gmail.com'
   const subject = 'Hi Mason'
-  const body = "I would like to hire you and pay you lots o' money!"
+  const body = "I would like to hire you and payscoy you lots o' money!"
 
   const mailTo = `mailto:${email}?subject=${subject}&body=${body}`
 

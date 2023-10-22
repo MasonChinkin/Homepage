@@ -19,7 +19,8 @@
     "baseUrl": "./",
     "paths": {
       "src/*": ["src/*"]
-    }
+    },
+    "types": ["node_modules", "vitest/globals"]
   },
   "ts-node": {
     "compilerOptions": {
