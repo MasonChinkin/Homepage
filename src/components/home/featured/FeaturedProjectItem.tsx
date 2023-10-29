@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import classNames from 'classnames'
-import { isPhone } from 'src/utils/device'
 import { ProjectType } from 'src/components/projects/projectList'
+import { isPhone } from 'src/utils/device'
 
 type FeaturedProjectItemProps = {
   project: ProjectType
@@ -19,7 +19,6 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   return (
     <figure className="featured-project-item-wrapper">
       <a
-        target="_blank"
         rel="noopener noreferrer"
         href={externalLink}
         className="featured-project-item"

@@ -23,7 +23,7 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
       Live
     </Button>
   ) : (
-    <a href={externalLink}>
+    <a rel="noopener noreferrer" href={externalLink}>
       <Button variant="primary">Live</Button>
     </a>
   )
