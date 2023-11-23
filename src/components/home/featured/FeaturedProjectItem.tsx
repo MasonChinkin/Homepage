@@ -8,7 +8,7 @@ type FeaturedProjectItemProps = {
 }
 
 const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
-  const { img, webp, title, description, externalLink } = project
+  const { img, webp, title, description, externalLink, internalLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
 
   const imgClasses = classNames('featured-project-item-img', {
@@ -20,7 +20,7 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
     <figure className="featured-project-item-wrapper">
       <a
         rel="noopener noreferrer"
-        href={externalLink}
+        href={externalLink || internalLink}
         className="featured-project-item"
       >
         <img
