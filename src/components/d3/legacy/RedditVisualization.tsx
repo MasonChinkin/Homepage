@@ -6,7 +6,7 @@ import Instructions from './components/reddit-visualization/components/Instructi
 import Visualization from './components/reddit-visualization/components/Visualization'
 import initializeViz from './components/reddit-visualization/vizScript'
 
-const RedditVisualization = () => {
+export const Component = () => {
   useEffect(() => {
     initializeViz()
   }, [])
@@ -22,5 +22,3 @@ const RedditVisualization = () => {
     </div>
   )
 }
-
-export default RedditVisualization

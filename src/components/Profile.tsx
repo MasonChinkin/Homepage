@@ -11,7 +11,7 @@ type RouteObj = {
   element: JSX.Element
 }
 
-const Profile = () => {
+export const Component = () => {
   const routes: RouteObj[] = [
     { path: '/', element: <Home /> },
     { path: '/about', element: <About /> },
@@ -48,5 +48,3 @@ const Profile = () => {
     </>
   )
 }
-
-export default Profile
