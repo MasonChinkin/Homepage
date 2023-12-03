@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import { ProjectType } from 'src/components/projects/projectList'
 import { isPhone } from 'src/utils/device'
@@ -16,30 +17,44 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
     'featured-project-item-img-hover': !!webp,
   })
 
+  const content = (
+    <>
+      <img
+        className={imgClasses}
+        onLoad={(): void => setImgLoaded(true)}
+        src={img}
+        alt="static project screenshot"
+      />
+      {!isPhone && (
+        <img
+          className="featured-project-item-webp"
+          src={webp}
+          alt="project webp"
+        />
+      )}
+      <div className="featured-project-caption">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+    </>
+  )
+
+  if (internalLink) {
+    return (
+      <figure className="featured-project-item-wrapper">
+        <Link to={internalLink}>{content}</Link>
+      </figure>
+    )
+  }
+
   return (
     <figure className="featured-project-item-wrapper">
       <a
         rel="noopener noreferrer"
-        href={externalLink || internalLink}
+        href={externalLink}
         className="featured-project-item"
       >
-        <img
-          className={imgClasses}
-          onLoad={(): void => setImgLoaded(true)}
-          src={img}
-          alt="static project screenshot"
-        />
-        {!isPhone && (
-          <img
-            className="featured-project-item-webp"
-            src={webp}
-            alt="project webp"
-          />
-        )}
-        <div className="featured-project-caption">
-          <h3>{title}</h3>
-          <p>{description}</p>
-        </div>
+        {content}
       </a>
     </figure>
   )
