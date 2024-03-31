@@ -23,6 +23,7 @@
     "react-router-dom": "^6.20.1"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240329.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@types/d3": "^6.0.0",
     "@types/node": "^18.0.0",

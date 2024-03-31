@@ -20,7 +20,7 @@
     "paths": {
       "src/*": ["src/*"]
     },
-    "types": ["node_modules", "vitest/globals"]
+    "types": ["node_modules", "vitest/globals", "@cloudflare/workers-types"]
   },
   "ts-node": {
     "compilerOptions": {
