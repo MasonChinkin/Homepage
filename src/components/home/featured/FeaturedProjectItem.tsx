@@ -42,7 +42,9 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   if (internalLink) {
     return (
       <figure className="featured-project-item-wrapper">
-        <Link to={internalLink}>{content}</Link>
+        <Link to={internalLink} className="featured-project-item">
+          {content}
+        </Link>
       </figure>
     )
   }
