@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import Profile from './Profile'
+import { Component as Profile } from './Profile'
 
 const component = (
   <BrowserRouter>
