@@ -1,3 +1,5 @@
+@use '../media-query' as *;
+
 .legacy {
   .inputs {
     display: flex;

@@ -1,14 +1,17 @@
+@use 'sass:math';
+@use 'sass:string';
+
 // n is number of stars required
 $area-size-y: 3384px;
 $area-size-x: 6016px;
 
 @function multiple-box-shadow($n) {
-  $value: '#{random($area-size-x)}px #{random($area-size-y)}px #FFF';
+  $value: '#{math.random(math.div($area-size-x, 1px))}px #{math.random(math.div($area-size-y, 1px))}px #FFF';
   @for $i from 2 through $n {
-    $value: '#{$value} , #{random($area-size-x)}px #{random($area-size-y)}px #FFF';
+    $value: '#{$value} , #{math.random(math.div($area-size-x, 1px))}px #{math.random(math.div($area-size-y, 1px))}px #FFF';
   }
 
-  @return unquote($value);
+  @return string.unquote($value);
 }
 
 $shadows-small: multiple-box-shadow(1000);
