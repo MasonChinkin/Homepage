@@ -12,6 +12,11 @@ const config: Configuration = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    module: true,
+    chunkFormat: 'module',
+  },
+  experiments: {
+    outputModule: true,
   },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
@@ -33,6 +38,7 @@ const config: Configuration = {
       },
     ],
   },
+  externalsType: 'module',
   externals: getExternals(),
   plugins: [
     new HtmlWebpackPlugin({
@@ -40,6 +46,7 @@ const config: Configuration = {
       favicon: './public/fav.ico',
       filename: 'index.html',
       hash: true,
+      scriptLoading: 'module',
       templateParameters: getTemplateParameters(isProduction),
     }),
   ],

@@ -3,6 +3,7 @@ type ExternalizedLibs = Record<
   {
     id: string
     name: string
+    templateName: string
     getUrl: (isProduction: boolean) => string
   }
 >
@@ -10,35 +11,38 @@ type ExternalizedLibs = Record<
 export const externalizedLibs: ExternalizedLibs = {
   react: {
     id: 'react',
-    name: 'React',
+    name: 'react',
+    templateName: 'react',
     getUrl: (isProduction) =>
-      isProduction
-        ? 'https://unpkg.com/react@18.2.0/umd/react.production.min.js'
-        : 'https://unpkg.com/react@18.2.0/umd/react.development.js',
+      `https://esm.sh/react@19.2.0${isProduction ? '' : '?dev'}`,
   },
   reactDom: {
     id: 'react-dom',
-    name: 'ReactDOM',
+    name: 'react-dom',
+    templateName: 'reactDom',
     getUrl: (isProduction) =>
-      isProduction
-        ? 'https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js'
-        : 'https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js',
+      `https://esm.sh/react-dom@19.2.0${isProduction ? '' : '?dev'}`,
+  },
+  reactDomClient: {
+    id: 'react-dom/client',
+    name: 'react-dom/client',
+    templateName: 'reactDomClient',
+    getUrl: (isProduction) =>
+      `https://esm.sh/react-dom@19.2.0/client${isProduction ? '' : '?dev'}`,
   },
   bootstrap: {
     id: 'bootstrap',
     name: 'bootstrap',
+    templateName: 'bootstrap',
     getUrl: (isProduction) =>
-      isProduction
-        ? 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'
-        : 'https://unpkg.com/bootstrap@5.3.2/dist/js/bootstrap.bundle.js',
+      `https://esm.sh/bootstrap@5.3.8${isProduction ? '' : '?dev'}`,
   },
   d3: {
     id: 'd3',
     name: 'd3',
+    templateName: 'd3',
     getUrl: (isProduction) =>
-      isProduction
-        ? 'https://unpkg.com/d3@6.7.0/dist/d3.min.js'
-        : 'https://unpkg.com/d3@6.7.0/dist/d3.js',
+      `https://esm.sh/d3@7.9.0${isProduction ? '' : '?dev'}`,
   },
 }
 
@@ -56,7 +60,7 @@ export const getTemplateParameters = (
 ): Record<string, string> =>
   Object.values(externalizedLibs).reduce(
     (acc, lib) => {
-      acc[`${lib.name}Url`] = lib.getUrl(isProduction)
+      acc[`${lib.templateName}Url`] = lib.getUrl(isProduction)
       return acc
     },
     {} as Record<string, string>
