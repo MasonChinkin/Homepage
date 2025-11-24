@@ -18,6 +18,9 @@ const config: Configuration = {
   experiments: {
     outputModule: true,
   },
+  performance: {
+    hints: false,
+  },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
     extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp', '.svg'],

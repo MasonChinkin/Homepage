@@ -1,12 +1,12 @@
-@import './_reset';
-@import './constants';
-@import './base';
-@import './background';
-@import './header';
-@import './intro';
-@import './projects';
-@import './about';
-@import './featured';
+@use './_reset';
+@use './constants' as *;
+@use './base';
+@use './background';
+@use './header';
+@use './intro';
+@use './projects';
+@use './about';
+@use './featured';
 
 // Below is required, but provided as a <link /> in index.html
 // @import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';

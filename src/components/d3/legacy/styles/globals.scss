@@ -1,3 +1,3 @@
-@import './media-query';
-@import './non-viz';
-@import './redditViz/redditViz';
+@use './media-query' as *;
+@use './non-viz';
+@use './redditViz/redditViz';
