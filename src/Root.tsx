@@ -14,6 +14,10 @@ const Root = () => {
           path="/reddit-visualization"
           lazy={() => import('./components/d3/legacy/RedditVisualization')}
         />
+        <Route
+          path="/budgetSankey"
+          lazy={() => import('./components/d3/legacy/BudgetSankeyVisualization')}
+        />
       </>
     )
   )
