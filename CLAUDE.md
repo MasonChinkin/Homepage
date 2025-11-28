@@ -11,7 +11,7 @@ This is a personal homepage built with React and TypeScript. The site is a singl
 - React 18.2.0 with TypeScript
 - React Router v6 for client-side routing
 - Webpack 5 for bundling (with esbuild-loader for compilation)
-- SCSS for styling (imported globally)
+- @emotion/react for CSS-in-JS styling (use `css` prop, NEVER use @emotion/styled)
 - D3 for data visualization
 - Vitest for unit testing
 - Cloudflare Pages + Workers for deployment
@@ -68,11 +68,14 @@ Most components are functional arrow functions exporting as default (eslint rule
 
 ### Styling
 
-- SCSS files in `src/styles/`
-- Variables & constants in `_reset.scss` and `constants.scss`
-- Global reset in `_reset.scss`
-- Component styles imported into main `index.scss`
-- No CSS modules; global class-based styling with Bootstrap 5
+**IMPORTANT: Use @emotion/react with the `css` prop for all component styling. NEVER use @emotion/styled.**
+
+- Primary styling: @emotion/react with `css` prop for component-scoped styles
+- Global styles defined in `src/styles/GlobalStyles.tsx` using Emotion's `Global` component
+- Theme constants exported from `src/styles/theme.ts`
+- Use the `css()` function with object syntax: `<div css={css({ color: 'red' })}>`
+- **DO NOT** use template literal syntax `css\`...\``- always use object syntax`css({ ... })`
+- **DO NOT** use `styled` components from @emotion/styled
 
 ### Build & Externals
 
@@ -140,6 +143,6 @@ Static assets in `public/` (favicon, base HTML) are copied into dist during buil
 - **Lazy routes:** Routes via `Root.tsx` use React Router lazy() for code splitting
 - **Externalized libraries:** React, ReactDOM, Bootstrap, D3 are loaded from CDN in production; don't bundle these
 - **Component exports:** Use default arrow function export (not named)
-- **Styling:** Global SCSS, no CSS-in-JS; class-based styling with Bootstrap utilities
+- **Styling:** Use @emotion/react with `css()` object syntax (NOT template literals); NEVER use @emotion/styled. Global styles in `GlobalStyles.tsx`, theme constants in `theme.ts`
 - **Testing:** happy-dom is lightweight but not a full browser DOM; use `vitest --browser=chrome` for browser testing if needed
 - **Pre-commit:** Husky hooks auto-fix eslint and prettier issues; commits are blocked if linting fails
