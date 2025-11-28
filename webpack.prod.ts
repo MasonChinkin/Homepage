@@ -8,6 +8,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const config: Configuration = {
   mode: 'production',
+  devtool: 'source-map',
   entry: './src/index.tsx',
   output: {
     filename: 'bundle.js',
