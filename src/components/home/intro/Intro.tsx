@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import classNames from 'classnames'
+import { introContainer } from 'src/components/home/homeStyles'
 import avatarImg from 'src/static/images/avatar.jpg'
 
 const Intro = () => {
@@ -10,7 +11,7 @@ const Intro = () => {
   })
 
   return (
-    <section className="intro frosted">
+    <section css={introContainer} className="frosted">
       <div className="intro-text">
         <h1>Mason Chinkin</h1>
         <p>

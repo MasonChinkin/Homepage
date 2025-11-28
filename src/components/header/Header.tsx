@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import classNames from 'classnames'
 import DesktopContact from './DesktopContact'
 import MobileContact from './MobileContact'
+import { navLinks } from './headerStyles'
 
 const Header = () => {
   const [scrolled, setScrolled] = useState<boolean>(false)
@@ -14,15 +14,16 @@ const Header = () => {
     })
   }, [setScrolled])
 
-  const classes = classNames('nav-links', {
-    'with-background': isMobile && scrolled,
-  })
+  const styles = [
+    navLinks.base,
+    isMobile && scrolled && navLinks.withBackground,
+  ]
 
   return (
     <header>
       <DesktopContact />
       <MobileContact />
-      <section className={classes}>
+      <section css={styles}>
         <NavLink
           to="/"
           className={({ isActive }) => (isActive ? 'selected' : '')}

@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "esnext",
     "moduleDetection": "force",

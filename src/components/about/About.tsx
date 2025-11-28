@@ -1,8 +1,9 @@
 import AboutImg from './AboutImg'
+import { aboutContainer } from './aboutStyles'
 
 const About = () => (
   <div className="height-transition-wrapper">
-    <main className="about frosted">
+    <main css={aboutContainer} className="frosted">
       <section className="about-me">
         <h2>About Me</h2>
         <AboutImg />

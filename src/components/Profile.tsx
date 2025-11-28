@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import Background from './Background'
 import About from './about/About'
 import Header from './header/Header'
