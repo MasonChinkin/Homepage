@@ -4,6 +4,9 @@ import {
   mobileContactButton,
   modalContent,
   mobileContactModal,
+  mobileSocialLinks,
+  modalTitle,
+  modalFooter,
 } from './headerStyles'
 
 const MobileContact = () => {
@@ -33,8 +36,8 @@ const MobileContact = () => {
         centered
       >
         <div css={modalContent}>
-          <Modal.Title>Contact Me</Modal.Title>
-          <Modal.Body className="mobile-social-links">
+          <Modal.Title css={modalTitle}>Contact Me</Modal.Title>
+          <Modal.Body css={mobileSocialLinks}>
             <Button variant="outline-primary">
               <a
                 target="_blank"
@@ -59,7 +62,7 @@ const MobileContact = () => {
               </a>
             </Button>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer css={modalFooter}>
             <Button variant="secondary" onClick={(): void => setOpen(false)}>
               Close
             </Button>

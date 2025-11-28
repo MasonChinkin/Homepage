@@ -1,8 +1,16 @@
 import { useState } from 'react'
 import { Card, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import classNames from 'classnames'
 import { ProjectType } from './projectList'
+import { loadingImg } from 'src/styles/utilityStyles'
+import {
+  projectCard,
+  projectCardBody,
+  projectCardImg,
+  projectCardLinks,
+  projectCardText,
+  projectCardTitle,
+} from './projectsStyles'
 
 type ProjectGridItemProps = {
   project: ProjectType
@@ -13,10 +21,6 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
     project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
   const navigate = useNavigate()
-
-  const imgClasses = classNames('card-img', {
-    'loading-img': !imgLoaded,
-  })
 
   const handleLink = internalLink ? (
     <Button variant="primary" onClick={() => navigate(internalLink)}>
@@ -29,17 +33,17 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
   )
 
   return (
-    <Card>
+    <Card css={projectCard}>
       <Card.Img
-        className={imgClasses}
+        css={[projectCardImg, !imgLoaded && loadingImg]}
         variant="top"
         src={img}
         onLoad={(): void => setImgLoaded(true)}
       />
-      <Card.Body>
-        <Card.Title>{title}</Card.Title>
-        <Card.Text>{description}</Card.Text>
-        <div className="card-links">
+      <Card.Body css={projectCardBody}>
+        <Card.Title css={projectCardTitle}>{title}</Card.Title>
+        <Card.Text css={projectCardText}>{description}</Card.Text>
+        <div css={projectCardLinks}>
           {handleLink}
           {githubLink && (
             <a href={githubLink}>

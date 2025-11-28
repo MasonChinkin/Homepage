@@ -13,25 +13,6 @@ export const introContainer = css({
   margin: '0 auto 2rem',
   justifyContent: 'space-between',
 
-  '.avatar-img': {
-    marginLeft: '10px',
-    borderRadius: '50%',
-    width: '45%',
-
-    '&.loading-img': {
-      width: '45%',
-    },
-  },
-
-  '.intro-text': {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    textAlign: 'center',
-    maxWidth: '420px',
-    paddingRight: '5px',
-  },
-
   [mediaQueries.tablet]: {
     flexDirection: 'column-reverse',
     alignItems: 'center',
@@ -42,10 +23,25 @@ export const introContainer = css({
     h1: {
       marginBottom: '0.5rem',
     },
-
-    '.avatar-img': {
-      marginLeft: 0,
-      marginBottom: '0.5rem',
-    },
   },
+})
+
+export const avatarImg = css({
+  marginLeft: '10px',
+  borderRadius: '50%',
+  width: '45%',
+
+  [mediaQueries.tablet]: {
+    marginLeft: 0,
+    marginBottom: '0.5rem',
+  },
+})
+
+export const introText = css({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  textAlign: 'center',
+  maxWidth: '420px',
+  paddingRight: '5px',
 })

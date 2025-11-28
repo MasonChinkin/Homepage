@@ -1,5 +1,5 @@
 import { Global, css } from '@emotion/react'
-import { colors, mediaQueries, animations } from './theme'
+import { colors, mediaQueries } from './theme'
 
 const globalStyles = css`
   /* Reset styles */
@@ -248,46 +248,6 @@ const globalStyles = css`
     }
     to {
       left: 0;
-    }
-  }
-
-  /* Utility classes */
-  .height-transition-wrapper {
-    min-height: 91vh;
-
-    ${mediaQueries.mobile} {
-      min-height: 0;
-    }
-  }
-
-  .loading-img {
-    animation-duration: ${animations.shimmerDuration};
-    animation-fill-mode: forwards;
-    animation-iteration-count: infinite;
-    animation-name: placeHolderShimmer;
-    animation-timing-function: linear;
-    background-color: ${colors.loadingGray};
-    background-image: linear-gradient(
-      to right,
-      ${colors.loadingGray} 0%,
-      ${colors.loadingGrayDark} 20%,
-      ${colors.loadingGray} 40%,
-      ${colors.loadingGray} 100%
-    );
-    background-repeat: no-repeat;
-    background-size: 2000px 1000px;
-    position: relative;
-    object-position: -99999px 99999px;
-  }
-
-  .frosted {
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(2px);
-    border-radius: 10px;
-    padding: 1.5rem;
-
-    ${mediaQueries.mobile} {
-      padding: 1rem;
     }
   }
 

@@ -1,8 +1,16 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import classNames from 'classnames'
 import { ProjectType } from 'src/components/projects/projectList'
 import { isPhone } from 'src/utils/device'
+import { loadingImg } from 'src/styles/utilityStyles'
+import {
+  featuredProjectItemWrapper,
+  featuredProjectItem as featuredProjectItemStyle,
+  featuredProjectCaption,
+  featuredProjectItemImg,
+  featuredProjectItemImgHover,
+  featuredProjectItemWebp,
+} from 'src/components/home/featuredStyles'
 
 type FeaturedProjectItemProps = {
   project: ProjectType
@@ -12,27 +20,22 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   const { img, webp, title, description, externalLink, internalLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
 
-  const imgClasses = classNames('featured-project-item-img', {
-    'loading-img': !imgLoaded,
-    'featured-project-item-img-hover': !!webp,
-  })
-
   const content = (
     <>
       <img
-        className={imgClasses}
+        css={[
+          featuredProjectItemImg,
+          webp && featuredProjectItemImgHover,
+          !imgLoaded && loadingImg,
+        ]}
         onLoad={(): void => setImgLoaded(true)}
         src={img}
         alt="static project screenshot"
       />
       {!isPhone && (
-        <img
-          className="featured-project-item-webp"
-          src={webp}
-          alt="project webp"
-        />
+        <img css={featuredProjectItemWebp} src={webp} alt="project webp" />
       )}
-      <div className="featured-project-caption">
+      <div css={featuredProjectCaption}>
         <h3>{title}</h3>
         <p>{description}</p>
       </div>
@@ -41,8 +44,8 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
 
   if (internalLink) {
     return (
-      <figure className="featured-project-item-wrapper">
-        <Link to={internalLink} className="featured-project-item">
+      <figure css={featuredProjectItemWrapper}>
+        <Link to={internalLink} css={featuredProjectItemStyle}>
           {content}
         </Link>
       </figure>
@@ -50,11 +53,11 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   }
 
   return (
-    <figure className="featured-project-item-wrapper">
+    <figure css={featuredProjectItemWrapper}>
       <a
         rel="noopener noreferrer"
         href={externalLink}
-        className="featured-project-item"
+        css={featuredProjectItemStyle}
       >
         {content}
       </a>

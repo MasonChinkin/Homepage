@@ -1,10 +1,11 @@
 import AboutImg from './AboutImg'
-import { aboutContainer } from './aboutStyles'
+import { aboutContainer, aboutSection } from './aboutStyles'
+import { heightTransitionWrapper, frostedStyle } from 'src/styles/utilityStyles'
 
 const About = () => (
-  <div className="height-transition-wrapper">
-    <main css={aboutContainer} className="frosted">
-      <section className="about-me">
+  <div css={heightTransitionWrapper}>
+    <main css={[aboutContainer, frostedStyle]}>
+      <section css={aboutSection}>
         <h2>About Me</h2>
         <AboutImg />
         <p>I like food.</p>

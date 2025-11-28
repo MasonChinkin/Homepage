@@ -36,30 +36,6 @@ export const navLinks = {
       paddingBottom: 0,
     },
 
-    a: {
-      margin: '0 0.5rem',
-      padding: '1rem 1.5rem',
-      color: colors.gray,
-      fontSize: 'large',
-
-      '&:hover': {
-        color: colors.lightGray,
-        textDecoration: 'none',
-      },
-
-      '&.selected': {
-        color: colors.white,
-        borderBottom: `solid ${colors.white} 3px`,
-      },
-
-      [mediaQueries.phone]: {
-        margin: 0,
-        padding: '0.5rem',
-        textAlign: 'center',
-        width: 'min-content',
-      },
-    },
-
     [mediaQueries.phone]: {
       justifyContent: 'space-around',
       position: 'fixed',
@@ -78,6 +54,30 @@ export const navLinks = {
     backgroundColor: colors.background,
   }),
 }
+
+export const navLink = css({
+  margin: '0 0.5rem',
+  padding: '1rem 1.5rem',
+  color: colors.gray,
+  fontSize: 'large',
+
+  '&:hover': {
+    color: colors.lightGray,
+    textDecoration: 'none',
+  },
+
+  [mediaQueries.phone]: {
+    margin: 0,
+    padding: '0.5rem',
+    textAlign: 'center',
+    width: 'min-content',
+  },
+})
+
+export const navLinkSelected = css({
+  color: colors.white,
+  borderBottom: `solid ${colors.white} 3px`,
+})
 
 export const desktopSocialLinks = css({
   animation: `${slideInFromLeft} ${animations.slideInDuration}`,
@@ -133,38 +133,35 @@ export const mobileContactButton = css({
 
 export const modalContent = css({
   margin: '0 2rem',
+})
 
-  '.mobile-social-links': {
-    display: 'flex',
-    flexDirection: 'column',
+export const mobileSocialLinks = css({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '0 1rem',
 
-    '.btn': {
-      margin: '0 2rem 1rem',
+  '.btn': {
+    margin: '0 2rem 1rem',
 
-      '&:active, &:hover *': {
-        color: colors.white,
-      },
-    },
-
-    '.btn:last-child': {
-      margin: '0 1rem 0',
+    '&:active, &:hover *': {
+      color: colors.white,
     },
   },
 
-  '.modal-title': {
-    color: '#6c757d',
-    margin: '1rem auto',
+  '.btn:last-child': {
+    margin: '0 1rem 0',
   },
+})
 
-  '.modal-body': {
-    padding: '0 1rem',
-  },
+export const modalTitle = css({
+  color: '#6c757d',
+  margin: '1rem auto',
+})
 
-  '.modal-footer': {
-    borderTop: 'none',
-    padding: 0,
-    margin: '0 0.5rem 0.5rem 0',
-  },
+export const modalFooter = css({
+  borderTop: 'none',
+  padding: 0,
+  margin: '0 0.5rem 0.5rem 0',
 })
 
 export const mobileContactModal = css({
