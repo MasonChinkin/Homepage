@@ -5,6 +5,8 @@ import * as d3 from 'd3'
 import { stackMin, stackMax } from './utils'
 
 export function drawBars(barData) {
+  const barsContainer = document.getElementById('barsContainer')!
+
   // set the dimensions and margins of the graph
   const barsMargin = {
     top: 10,
@@ -76,9 +78,9 @@ export function drawBars(barData) {
         ? 'green'
         : 'red'
     })
-    .style('opacity', (d) => (d.data.year === thisYear ? 0.8 : 0.6))
-    .style('stroke', (d) => (d.data.year === thisYear ? 'black' : 'none'))
-    .style('stroke-width', (d) => (d.data.year === thisYear ? '2px' : 'none'))
+    .style('opacity', (d) => (d.data.year === window.thisYear ? 0.8 : 0.6))
+    .style('stroke', (d) => (d.data.year === window.thisYear ? 'black' : 'none'))
+    .style('stroke-width', (d) => (d.data.year === window.thisYear ? '2px' : 'none'))
 
   // net line
   const line = d3
@@ -110,7 +112,7 @@ export function drawBars(barData) {
 export function updateBars(thisYear) {
   const transition = 50
 
-  rects
+  window.rects
     .transition()
     .duration(transition)
     .style('opacity', (d) => (d.data.year === thisYear ? 0.8 : 0.6))

@@ -9,6 +9,8 @@ import { newData, newYearTransition } from './utils'
 import { updateSankey, drawDeficit } from './sankey'
 
 export function drawSlider() {
+  const barsContainer = document.getElementById('barsContainer')!
+
   const slider = d3Slider
     .sliderHorizontal()
     .min(1968)
