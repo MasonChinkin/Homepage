@@ -7,7 +7,7 @@ import { updateThisYearLine } from './lines'
 import { newData, newYearTransition } from './utils'
 import { updateSankey, drawDeficit } from './sankey'
 
-export function drawSlider() {
+export function drawSlider(rects, sankey, sankeySvg, node, revLineX, spendLineX, lineY, lineData) {
   const minYear = 1968
   const maxYear = 2017
   const defaultYear = 2017
@@ -117,7 +117,6 @@ export function drawSlider() {
 
   // Initialize current value
   let currentValue = defaultYear
-  window.thisYear = currentValue
 
   // Fade tick text that's too close to handle
   function fadeTickText() {
@@ -137,7 +136,6 @@ export function drawSlider() {
     const roundedYear = Math.round(year)
     if (roundedYear !== currentValue) {
       currentValue = roundedYear
-      window.thisYear = currentValue
 
       handleGroup.attr('transform', `translate(${scale(currentValue)},0)`)
       handleGroup
@@ -147,8 +145,8 @@ export function drawSlider() {
       fadeTickText()
 
       // Call onchange callback
-      updateBars(currentValue)
-      updateThisYearLine(currentValue)
+      updateBars(rects, currentValue)
+      updateThisYearLine(revLineX, spendLineX, lineY, lineData, currentValue)
     }
   }
 
@@ -161,9 +159,9 @@ export function drawSlider() {
           // update
           d3.select('.deficit').remove()
           d3.select('.deficitLabel').remove()
-          newData(csv, deficit, year)
-          updateSankey()
-          setTimeout(() => drawDeficit(), newYearTransition)
+          const data = newData(csv, deficit, year)
+          updateSankey(sankey, sankeySvg, node, data.nodes, data.links, data.thisYearDeficit)
+          setTimeout(() => drawDeficit(sankey, sankeySvg, data.thisYearDeficit, sankey.size()[0], sankey.size()[1]), newYearTransition)
         }
       )
     })

@@ -2,9 +2,9 @@
 // eslint-disable-next-line
 // @ts-nocheck
 import * as d3 from 'd3'
-import { highlight, formatNumber } from './utils'
+import { createHighlightHandler, formatNumber } from './utils'
 
-export function drawLines() {
+export function drawLines(lineData, thisYear) {
   // separate datasets filtered by type
   const revLineData = lineData.filter((d) => d.type == 'Revenue')
   const spendLineData = lineData.filter((d) => d.type == 'Spending')
@@ -18,7 +18,7 @@ export function drawLines() {
   ).map(([key, values]) => ({ key, values }))
 
   // Dimensions
-  window.lineMargin = {
+  const lineMargin = {
     top: 20,
     right: 20,
     bottom: 10,
@@ -26,11 +26,11 @@ export function drawLines() {
     middle: 20,
   }
 
-  window.lineWidth =
+  const lineWidth =
     linesContainer.offsetWidth - lineMargin.left - lineMargin.right
-  window.lineHeight = 140 - lineMargin.top - lineMargin.bottom
+  const lineHeight = 140 - lineMargin.top - lineMargin.bottom
 
-  window.lineSvg = d3
+  const lineSvg = d3
     .select('#linesContainer')
     .append('svg')
     .attr('width', lineWidth + lineMargin.left + lineMargin.right)
@@ -39,17 +39,17 @@ export function drawLines() {
     .attr('transform', `translate(${lineMargin.left},${lineMargin.top})`)
 
   // set the domain and range
-  window.revLineX = d3
+  const revLineX = d3
     .scaleBand()
     .domain(revLineData.map((d) => d.year))
     .range([lineMargin.left, lineWidth / 2 - lineMargin.middle])
 
-  window.spendLineX = d3
+  const spendLineX = d3
     .scaleBand()
     .domain(spendLineData.map((d) => d.year))
     .range([lineWidth / 2 + lineMargin.middle, lineWidth - lineMargin.right])
 
-  window.lineY = d3
+  const lineY = d3
     .scaleLinear()
     .domain([0, d3.max(revLineData, (d) => d.value)])
     .range([lineHeight - lineMargin.bottom, lineMargin.top])
@@ -64,6 +64,8 @@ export function drawLines() {
     .line()
     .x((d) => spendLineX(d.year))
     .y((d) => lineY(d.value))
+
+  const highlight = createHighlightHandler(lineData, thisYear, revLineX, spendLineX, lineY)
 
   // revenue lines
   const revLines = lineSvg
@@ -170,9 +172,11 @@ export function drawLines() {
     .text((d) => thisYear)
     .attr('x', spendLineX(thisYear))
     .attr('y', lineHeight + lineMargin.bottom * 0.2)
+
+  return { revLineX, spendLineX, lineY }
 }
 
-export function updateThisYearLine(thisYear) {
+export function updateThisYearLine(revLineX, spendLineX, lineY, lineData, thisYear) {
   // line indicating current year
   d3.select('.thisYearLine.rev line')
     .attr('x1', revLineX(thisYear))
@@ -192,23 +196,31 @@ export function updateThisYearLine(thisYear) {
     .attr('x', spendLineX(thisYear))
     .style('opacity', (d) => (thisYear == 1968 || thisYear == 2017 ? 0 : 1))
 
-  ;(function (d) {
-    if (window.key != 0 && window.lineLabelData) {
+  // Update line labels if a key is currently active
+  const activeKey = d3.select('.link').attr('key')
+  if (activeKey) {
+    const lineLabelData = lineData.filter(
+      (d) =>
+        d.source.split(' ').join('_') == activeKey ||
+        d.target.split(' ').join('_') == activeKey
+    )
+
+    if (lineLabelData.length > 0) {
       d3.selectAll('.lineLabel').remove()
 
       d3.selectAll('.lineNode')
         .filter(function (d, i) {
-          return d3.select(this).attr('key') == window.key
+          return d3.select(this).attr('key') == activeKey
         })
         .append('g')
         .selectAll('text')
-        .data(window.lineLabelData)
+        .data(lineLabelData)
         .enter()
         .append('text')
         .filter(function (d, i) {
           return (
             i === 0 ||
-            i === window.lineLabelData.length - 1 ||
+            i === lineLabelData.length - 1 ||
             d.year === thisYear
           )
         })
@@ -219,5 +231,5 @@ export function updateThisYearLine(thisYear) {
         .text((d, i) => formatNumber(d.value))
         .attr('class', 'lineLabel')
     }
-  })()
+  }
 }

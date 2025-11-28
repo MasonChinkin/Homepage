@@ -4,7 +4,7 @@
 import * as d3 from 'd3'
 import { stackMin, stackMax } from './utils'
 
-export function drawBars(barData) {
+export function drawBars(barData, thisYear) {
   // set the dimensions and margins of the graph
   const barsMargin = {
     top: 10,
@@ -60,7 +60,7 @@ export function drawBars(barData) {
     .attr('class', (d, i) => d.key)
 
   // add rect for each data value
-  window.rects = bars
+  const rects = bars
     .selectAll('rect')
     .data((d) => d)
     .enter()
@@ -105,9 +105,11 @@ export function drawBars(barData) {
     .attr('dy', '0em')
     .attr('class', 'bar-labels')
     .text('Spending/Deficit')
+
+  return { rects }
 }
 
-export function updateBars(thisYear) {
+export function updateBars(rects, thisYear) {
   const transition = 50
 
   rects
