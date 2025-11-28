@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 
 const Root = () => {
+  console.log('Root component rendered')
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
