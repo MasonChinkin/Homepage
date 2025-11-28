@@ -30,13 +30,6 @@ export const externalizedLibs: ExternalizedLibs = {
     getUrl: (isProduction) =>
       `https://esm.sh/react-dom@19.2.0/client${isProduction ? '' : '?dev'}`,
   },
-  bootstrap: {
-    id: 'bootstrap',
-    name: 'bootstrap',
-    templateName: 'bootstrap',
-    getUrl: (isProduction) =>
-      `https://esm.sh/bootstrap@5.3.8${isProduction ? '' : '?dev'}`,
-  },
   d3: {
     id: 'd3',
     name: 'd3',
