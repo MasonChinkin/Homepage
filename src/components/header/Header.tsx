@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import classNames from 'classnames'
 import DesktopContact from './DesktopContact'
 import MobileContact from './MobileContact'
+import { navLinks, navLink, navLinkSelected } from './headerStyles'
 
 const Header = () => {
   const [scrolled, setScrolled] = useState<boolean>(false)
@@ -14,32 +14,32 @@ const Header = () => {
     })
   }, [setScrolled])
 
-  const classes = classNames('nav-links', {
-    'with-background': isMobile && scrolled,
-  })
+  const styles = [
+    navLinks.base,
+    isMobile && scrolled && navLinks.withBackground,
+  ]
 
   return (
     <header>
       <DesktopContact />
       <MobileContact />
-      <section className={classes}>
-        <NavLink
-          to="/"
-          className={({ isActive }) => (isActive ? 'selected' : '')}
-        >
-          Home
+      <section css={styles}>
+        <NavLink to="/">
+          {({ isActive }) => (
+            <span css={[navLink, isActive && navLinkSelected]}>Home</span>
+          )}
         </NavLink>
-        <NavLink
-          to="/about"
-          className={({ isActive }) => (isActive ? 'selected' : '')}
-        >
-          About
+        <NavLink to="/about">
+          {({ isActive }) => (
+            <span css={[navLink, isActive && navLinkSelected]}>About</span>
+          )}
         </NavLink>
-        <NavLink
-          to="/d3"
-          className={({ isActive }) => (isActive ? 'selected' : '')}
-        >
-          D3 Projects
+        <NavLink to="/d3">
+          {({ isActive }) => (
+            <span css={[navLink, isActive && navLinkSelected]}>
+              D3 Projects
+            </span>
+          )}
         </NavLink>
       </section>
     </header>

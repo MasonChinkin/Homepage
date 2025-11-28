@@ -29,11 +29,16 @@ const config: Configuration = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: [{ loader: 'esbuild-loader' }],
-      },
-      {
-        test: /\.s[ac]ss$/i,
-        use: ['style-loader', 'css-loader', 'sass-loader'],
+        use: [
+          {
+            loader: 'esbuild-loader',
+            options: {
+              loader: 'tsx',
+              target: 'es2015',
+              jsxImportSource: '@emotion/react',
+            },
+          },
+        ],
       },
       {
         test: /\.(webp|png|jpe?g|svg)$/i,

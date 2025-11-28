@@ -1,8 +1,13 @@
 import { createRoot } from 'react-dom/client'
 import Root from './Root'
-import './styles/index.scss'
+import GlobalStyles from './styles/GlobalStyles'
 
 const domNode = document.getElementById('root')!
 const root = createRoot(domNode)
 
-root.render(<Root />)
+root.render(
+  <>
+    <GlobalStyles />
+    <Root />
+  </>
+)

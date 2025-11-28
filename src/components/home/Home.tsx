@@ -1,9 +1,11 @@
 import FeaturedProjects from './featured/FeaturedProjects'
+import { homeContainer } from './homeStyles'
 import Intro from './intro/Intro'
+import { heightTransitionWrapper } from 'src/styles/utilityStyles'
 
 const Home = () => (
-  <div className="height-transition-wrapper">
-    <main className="home">
+  <div css={heightTransitionWrapper}>
+    <main css={homeContainer}>
       <Intro />
       <FeaturedProjects />
     </main>

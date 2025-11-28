@@ -1,8 +1,10 @@
+import { starsSmall, starsMedium, starsBig } from 'src/styles/backgroundStyles'
+
 const Background = () => (
   <>
-    <div className="stars" />
-    <div className="stars2" />
-    <div className="stars3" />
+    <div css={starsSmall} />
+    <div css={starsMedium} />
+    <div css={starsBig} />
   </>
 )
 

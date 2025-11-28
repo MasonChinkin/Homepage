@@ -1,3 +1,5 @@
+import { desktopSocialLinks } from './headerStyles'
+
 const DesktopContact = () => {
   const email = 'mason.chinkin@gmail.com'
   const subject = 'Hi Mason'
@@ -6,7 +8,7 @@ const DesktopContact = () => {
   const mailTo = `mailto:${email}?subject=${subject}&body=${body}`
 
   return (
-    <section className="desktop-social-links">
+    <section css={desktopSocialLinks}>
       <a
         target="_blank"
         rel="noopener noreferrer"

@@ -1,17 +1,18 @@
 import { useState } from 'react'
-import classNames from 'classnames'
+import {
+  introContainer,
+  avatarImg as avatarImgStyle,
+  introText,
+} from 'src/components/home/homeStyles'
 import avatarImg from 'src/static/images/avatar.jpg'
+import { frostedStyle, loadingImg } from 'src/styles/utilityStyles'
 
 const Intro = () => {
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
 
-  const imgClasses = classNames('avatar-img', {
-    'loading-img': !imgLoaded,
-  })
-
   return (
-    <section className="intro frosted">
-      <div className="intro-text">
+    <section css={[introContainer, frostedStyle]}>
+      <div css={introText}>
         <h1>Mason Chinkin</h1>
         <p>
           Economist turned software engineer.{' '}
@@ -34,7 +35,7 @@ const Intro = () => {
         </p>
       </div>
       <img
-        className={imgClasses}
+        css={[avatarImgStyle, !imgLoaded && loadingImg]}
         onLoad={(): void => setImgLoaded(true)}
         alt="avatar of Mason Chinkin"
         src={avatarImg}

@@ -1,5 +1,5 @@
-import ReactCSSTransitionReplace from 'react-css-transition-replace'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 import Background from './Background'
 import About from './about/About'
 import Header from './header/Header'
@@ -20,22 +20,22 @@ export const Component = () => {
   ]
 
   const location = useLocation()
-  const transitionDuration: number = 500 // matching value in base.scss
 
   return (
     <>
       <Background />
       <Header />
 
-      {/* @ts-expect-error async component throws type error */}
-      <ReactCSSTransitionReplace
-        transitionName="fade-wait"
-        transitionEnterTimeout={transitionDuration}
-        transitionLeaveTimeout={transitionDuration}
-      >
-        <div key={location.pathname}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <Routes location={location}>
-            {routes.map((route, i) => (
+            {routes.map((route) => (
               <Route
                 key={location.pathname}
                 path={route.path}
@@ -43,8 +43,8 @@ export const Component = () => {
               />
             ))}
           </Routes>
-        </div>
-      </ReactCSSTransitionReplace>
+        </motion.div>
+      </AnimatePresence>
     </>
   )
 }
