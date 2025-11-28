@@ -2,15 +2,14 @@
 // eslint-disable-next-line
 // @ts-nocheck
 import * as d3 from 'd3'
-import * as d3Slider from '../assets/d3-simple-slider'
+import { sliderHorizontal } from 'd3-simple-slider'
 import { updateBars } from './bars'
 import { updateThisYearLine } from './lines'
-import { newData, newYearTransition } from './utils'
 import { updateSankey, drawDeficit } from './sankey'
+import { newData, newYearTransition } from './utils'
 
 export function drawSlider() {
-  const slider = d3Slider
-    .sliderHorizontal()
+  const slider = sliderHorizontal()
     .min(1968)
     .max(2017)
     .step(1)
