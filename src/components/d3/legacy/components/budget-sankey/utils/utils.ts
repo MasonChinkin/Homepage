@@ -13,24 +13,21 @@ export const fontScale = d3.scaleLinear().range([14, 22])
 export const newYearTransition = 800
 export const highlightTransition = 50
 
-window.thisYear = 2017
-window.key = 0 // initialize for highlighting purposes; gets redefined as 'income', 'payroll', etc on mouseover
-
 export function newData(csv, deficit, thisYear) {
-  window.thisYearCsv = csv.filter((d) => d.year == thisYear)
+  const thisYearCsv = csv.filter((d) => d.year == thisYear)
   thisYearCsv.forEach((d) => (d.dollars = +d.dollars))
-  window.thisYearDeficit = deficit.filter((d) => d.year == thisYear)
+  const thisYearDeficit = deficit.filter((d) => d.year == thisYear)
 
   // create an array to push all sources and targets, before making them unique
   // because starting nodes are not targets and end nodes are not sources
-  window.arr = []
+  const arr = []
   thisYearCsv.forEach((d) => {
     arr.push(d.source)
     arr.push(d.target)
   })
 
   // create nodes array
-  window.nodes = arr.filter(onlyUnique).map((thisYearCsv, i) => {
+  const nodes = arr.filter(onlyUnique).map((thisYearCsv, i) => {
     return {
       node: i,
       name: thisYearCsv,
@@ -38,7 +35,7 @@ export function newData(csv, deficit, thisYear) {
   })
 
   // create links array
-  window.links = thisYearCsv.map((thisYearCsv_row) => {
+  const links = thisYearCsv.map((thisYearCsv_row) => {
     return {
       source: getNode('source'),
       target: getNode('target'),
@@ -53,7 +50,7 @@ export function newData(csv, deficit, thisYear) {
     }
   })
 
-  window.lineData = csv
+  const lineData = csv
   lineData.forEach((d) => {
     d.year = +d.year
     d.value = +d.value
@@ -68,84 +65,86 @@ export function newData(csv, deficit, thisYear) {
   }
 }
 
-export function highlight() {
-  window.key = d3.select(this).attr('key')
+export function createHighlightHandler(lineData, thisYear, revLineX, spendLineX, lineY) {
+  return function highlight() {
+    const key = d3.select(this).attr('key')
 
-  window.lineLabelData = lineData.filter(
-    (d) =>
-      d.source.split(' ').join('_') == key ||
-      d.target.split(' ').join('_') == key
-  )
-
-  d3.selectAll('.line')
-    .filter(function (d) {
-      return d3.select(this).attr('key') == key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('opacity', 1)
-
-  d3.selectAll('.line')
-    .filter(function (d) {
-      return d3.select(this).attr('key') != key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('opacity', 0.2)
-
-  d3.selectAll('.link')
-    .filter(function (d) {
-      return d3.select(this).attr('key') == key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('stroke-opacity', 0.7)
-
-  d3.selectAll('.link')
-    .filter(function (d) {
-      return d3.select(this).attr('key') != key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('stroke-opacity', 0.4)
-
-  d3.selectAll('.nodeRect')
-    .filter(function (d) {
-      return d3.select(this).attr('key') == key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('opacity', 1)
-
-  d3.selectAll('.nodeRect')
-    .filter(function (d) {
-      return d3.select(this).attr('key') != key
-    })
-    .transition()
-    .duration(highlightTransition)
-    .style('opacity', 0.5)
-
-  // data points
-  d3.selectAll('.lineLabel').remove()
-
-  d3.selectAll('.lineNode')
-    .filter(function (d, i) {
-      return d3.select(this).attr('key') == key
-    })
-    .append('g')
-    .selectAll('text')
-    .data(lineLabelData)
-    .enter()
-    .append('text')
-    .filter(
-      (d, i) => i === 0 || i === lineLabelData.length - 1 || d.year === thisYear
+    const lineLabelData = lineData.filter(
+      (d) =>
+        d.source.split(' ').join('_') == key ||
+        d.target.split(' ').join('_') == key
     )
-    .attr('x', (d, i) =>
-      d.type == 'Revenue' ? revLineX(d.year) : spendLineX(d.year)
-    )
-    .attr('y', (d) => lineY(d.value) - 14)
-    .text((d, i) => formatNumber(d.value))
-    .attr('class', 'lineLabel')
+
+    d3.selectAll('.line')
+      .filter(function (d) {
+        return d3.select(this).attr('key') == key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('opacity', 1)
+
+    d3.selectAll('.line')
+      .filter(function (d) {
+        return d3.select(this).attr('key') != key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('opacity', 0.2)
+
+    d3.selectAll('.link')
+      .filter(function (d) {
+        return d3.select(this).attr('key') == key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('stroke-opacity', 0.7)
+
+    d3.selectAll('.link')
+      .filter(function (d) {
+        return d3.select(this).attr('key') != key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('stroke-opacity', 0.4)
+
+    d3.selectAll('.nodeRect')
+      .filter(function (d) {
+        return d3.select(this).attr('key') == key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('opacity', 1)
+
+    d3.selectAll('.nodeRect')
+      .filter(function (d) {
+        return d3.select(this).attr('key') != key
+      })
+      .transition()
+      .duration(highlightTransition)
+      .style('opacity', 0.5)
+
+    // data points
+    d3.selectAll('.lineLabel').remove()
+
+    d3.selectAll('.lineNode')
+      .filter(function (d, i) {
+        return d3.select(this).attr('key') == key
+      })
+      .append('g')
+      .selectAll('text')
+      .data(lineLabelData)
+      .enter()
+      .append('text')
+      .filter(
+        (d, i) => i === 0 || i === lineLabelData.length - 1 || d.year === thisYear
+      )
+      .attr('x', (d, i) =>
+        d.type == 'Revenue' ? revLineX(d.year) : spendLineX(d.year)
+      )
+      .attr('y', (d) => lineY(d.value) - 14)
+      .text((d, i) => formatNumber(d.value))
+      .attr('class', 'lineLabel')
+  }
 }
 
 export const onlyUnique = (value, index, self) => self.indexOf(value) === index

@@ -2,24 +2,24 @@
 // eslint-disable-next-line
 // @ts-nocheck
 import * as d3 from 'd3'
-import * as d3Sankey from '../assets/d3sankey'
-import { fontScale, highlight, newYearTransition, format } from './utils'
+import * as d3Sankey from 'src/components/d3/legacy/components/budget-sankey/assets/d3sankey'
+import { fontScale, createHighlightHandler, newYearTransition, format } from './utils'
 
-export function drawSankey() {
+export function drawSankey(nodes, links, thisYearDeficit, lineData, thisYear, revLineX, spendLineX, lineY) {
   // set the dimensions and margins of the graph
-  window.sankeyMargin = {
+  const sankeyMargin = {
     top: 30,
     right: 10,
     bottom: 10,
     left: 10,
   }
 
-  window.sankeyWidth =
+  const sankeyWidth =
     sankeyContainer.offsetWidth - sankeyMargin.left - sankeyMargin.right
-  window.sankeyHeight = 375 - sankeyMargin.top - sankeyMargin.bottom
+  const sankeyHeight = 375 - sankeyMargin.top - sankeyMargin.bottom
 
   // append the svg object to the body of the page
-  window.sankeySvg = d3
+  const sankeySvg = d3
     .select('#sankeyContainer')
     .append('svg')
     .attr('width', sankeyWidth + sankeyMargin.left + sankeyMargin.right)
@@ -29,7 +29,7 @@ export function drawSankey() {
     .attr('transform', `translate(${sankeyMargin.left},${sankeyMargin.top})`)
 
   // Set the sankey diagram properties
-  window.sankey = d3Sankey
+  const sankey = d3Sankey
     .d3sankey()
     .nodeWidth(60)
     .nodePadding(20)
@@ -41,8 +41,10 @@ export function drawSankey() {
 
   fontScale.domain(d3.extent(nodes, (d) => d.value))
 
+  const highlight = createHighlightHandler(lineData, thisYear, revLineX, spendLineX, lineY)
+
   // add in the links
-  window.link = sankeySvg
+  const link = sankeySvg
     .append('g')
     .selectAll('.link')
     .data(links, (d) => d.id)
@@ -68,7 +70,7 @@ export function drawSankey() {
     .on('mouseover', highlight)
 
   // add in the nodes
-  window.node = sankeySvg
+  const node = sankeySvg
     .append('g')
     .selectAll('.node')
     .data(nodes)
@@ -133,9 +135,11 @@ export function drawSankey() {
     .filter((d) => d.node == 20)
     .text(() => `${format(thisYearDeficit[0].spending)}%`)
     .attr('class', 'spendingNodePercent')
+
+  return { sankey, sankeySvg, node, sankeyWidth, sankeyHeight }
 }
 
-export function updateSankey() {
+export function updateSankey(sankey, sankeySvg, node, nodes, links, thisYearDeficit) {
   const path = sankey.link()
 
   sankey.nodes(nodes).links(links).layout(1000)
@@ -206,20 +210,20 @@ export function updateSankey() {
     .attr('class', 'spendingNodePercent')
 }
 
-export function drawDeficit() {
+export function drawDeficit(sankey, sankeySvg, thisYearDeficit, sankeyWidth, sankeyHeight) {
   // remove old, if any
   d3.selectAll('.deficit').remove()
   d3.selectAll('.deficitLabel').remove()
 
   // highlight deficit
-  window.barHeight = d3.select('rect[key=Spending]').attr('height')
-  window.barVal = d3.select('rect[key=Spending]').attr('value')
-  window.deficitVal = thisYearDeficit[0].deficit
+  const barHeight = d3.select('rect[key=Spending]').attr('height')
+  const barVal = d3.select('rect[key=Spending]').attr('value')
+  const deficitVal = thisYearDeficit[0].deficit
 
   // get deficit bar size with ratio of spending value to bar height
-  window.deficitBarRatio = Math.floor((barHeight * deficitVal) / barVal)
+  const deficitBarRatio = Math.floor((barHeight * deficitVal) / barVal)
 
-  window.deficitBar = d3
+  const deficitBar = d3
     .select('rect[key=Spending]')
     .select(function () {
       return this.parentNode
