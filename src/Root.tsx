@@ -9,9 +9,14 @@ const Root = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/*" lazy={() => import('./components/Profile')} />
+        <Route
+          path="/*"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/Profile')}
+        />
         <Route
           path="/reddit-visualization"
+          HydrateFallback={() => null}
           lazy={() => import('./components/d3/legacy/RedditVisualization')}
         />
       </>
