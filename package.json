@@ -12,8 +12,7 @@
     "lint": "eslint --fix src",
     "format:check": "prettier --check",
     "format:fix": "prettier --write .",
-    "typecheck": "tsc --noEmit",
-    "prepare": "husky"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
