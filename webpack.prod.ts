@@ -7,6 +7,7 @@ import { ImportMapPlugin } from './webpack-importmap-plugin'
 
 const config: Configuration = {
   mode: 'production',
+  devtool: 'source-map',
   entry: './src/index.tsx',
   output: {
     filename: '[name].[contenthash:8].js',
