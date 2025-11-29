@@ -22,7 +22,12 @@ export async function visualize(vizType) {
     const url = getURL()
     let json
     try {
-      json = await fetch(url).then((res) => res.json())
+      json = await fetch(url, {
+        headers: {
+          'cache-control':
+            'private, s-maxage=0, max-age=0, must-revalidate, no-store',
+        },
+      }).then((res) => res.json())
       catchErrors(json)
     } catch (err) {
       console.log(err) // eslint-disable-line
