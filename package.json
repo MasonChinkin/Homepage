@@ -11,12 +11,12 @@
     "test:browser": "vitest --browser=chrome ",
     "lint": "eslint --fix src",
     "format:check": "prettier --check",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@radix-ui/react-dialog": "^1.1.15",
-    "classnames": "^2.5.1",
     "d3": "^7.9.0",
     "framer-motion": "^12.23.24",
     "react": "^19.2.0",
@@ -32,14 +32,10 @@
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@types/webpack-bundle-analyzer": "^4.7.0",
-    "@typescript-eslint/eslint-plugin": "^8.47.0",
-    "@typescript-eslint/parser": "^8.47.0",
     "@vitest/browser": "^4.0.13",
     "bun-types": "latest",
     "esbuild-loader": "^4.4.0",
     "eslint": "^9.39.1",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
@@ -52,18 +48,15 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.6.2",
-    "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0",
     "vitest": "^4.0.13",
-    "webdriverio": "^9.20.1",
     "webpack": "^5.103.0",
     "webpack-bundle-analyzer": "^5.0.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1",
-    "workbox-webpack-plugin": "^7.4.0",
     "wrangler": "^4.50.0"
   }
 }
