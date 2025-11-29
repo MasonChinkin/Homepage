@@ -12,11 +12,9 @@ const Featured = () => {
     d3Projects[2], // syria network
   ]
 
-  const featuredProjectsTiles: JSX.Element[] = projects.map(
-    (project, i: number): JSX.Element => (
-      <FeaturedProjectItem project={project} key={project.title} />
-    )
-  )
+  const featuredProjectsTiles = projects.map((project) => (
+    <FeaturedProjectItem project={project} key={project.title} />
+  ))
 
   return (
     <section css={featuredContainer}>

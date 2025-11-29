@@ -31,7 +31,7 @@ This is a personal homepage built with React and TypeScript. The site is a singl
 - **Format check:** `bun run format:check` (prettier)
 - **Format fix:** `bun run format:fix` (prettier --write)
 - **Build & preview Cloudflare Pages:** `bun run start:functions` (wrangler pages dev dist)
-- **Analyze bundle:** `bun run analyze` (webpack-bundle-analyzer)
+- **Analyze bundle:** `bun run analyze` (Rsdoctor)
 
 ## Architecture
 
@@ -89,7 +89,7 @@ Large libraries are externalized (loaded from CDN):
 
 - `webpack.prod.ts` - base production config
 - `webpack.dev.ts` - development override (dev server + HMR)
-- `webpack.analyze.ts` - production + bundle analyzer
+- `webpack.analyze.ts` - production + Rsdoctor analyzer
 - Uses esbuild-loader for TS/TSX compilation (fast)
 - Resolves extensions: `.ts`, `.tsx`, `.js`, `.jpg`, `.png`, `.webp`, `.svg`
 - Alias path from tsconfig: `src/*` can be imported directly

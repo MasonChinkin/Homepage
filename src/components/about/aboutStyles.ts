@@ -16,7 +16,7 @@ export const aboutContainer = css({
   ul: {
     margin: '1rem 0',
 
-    '& > *:first-child': {
+    '& > *:first-of-type': {
       marginBottom: '0.5rem',
     },
   },

@@ -1,9 +1,14 @@
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import { RsdoctorWebpackPlugin } from '@rsdoctor/webpack-plugin'
 import { merge } from 'webpack-merge'
 import prod from './webpack.prod'
 
 const config = merge(prod, {
-  plugins: [new BundleAnalyzerPlugin()],
+  plugins: [
+    new RsdoctorWebpackPlugin({
+      disableClientServer: false,
+      features: ['bundle', 'plugins', 'loader', 'resolver'],
+    }),
+  ],
 })
 
 export default config

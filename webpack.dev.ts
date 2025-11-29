@@ -10,6 +10,9 @@ const config = merge<
     open: true,
     historyApiFallback: true,
   },
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 })
 
 export default config
