@@ -9,16 +9,41 @@ const config: Configuration = {
   mode: 'production',
   entry: './src/index.tsx',
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash:8].js',
+    chunkFilename: '[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
     module: true,
     chunkFormat: 'module',
+    clean: true,
   },
   experiments: {
     outputModule: true,
   },
-  performance: {
-    hints: false,
+  cache: {
+    type: 'filesystem',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: 10,
+        },
+        emotion: {
+          test: /[\\/]node_modules[\\/]@emotion[\\/]/,
+          name: 'emotion',
+          priority: 20,
+        },
+        router: {
+          test: /[\\/]node_modules[\\/]react-router/,
+          name: 'router',
+          priority: 20,
+        },
+      },
+    },
+    runtimeChunk: 'single',
   },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
