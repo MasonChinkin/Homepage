@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Card, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import Card from 'src/components/ui/Card'
+import Button from 'src/components/ui/Button'
 import { ProjectType } from './projectList'
 import { loadingImg } from 'src/styles/utilityStyles'
 import {
@@ -36,7 +37,6 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
     <Card css={projectCard}>
       <Card.Img
         css={[projectCardImg, !imgLoaded && loadingImg]}
-        variant="top"
         src={img}
         onLoad={(): void => setImgLoaded(true)}
       />

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import * as Dialog from '@radix-ui/react-dialog'
+import Button from 'src/components/ui/Button'
 import {
   mobileContactButton,
   modalContent,
@@ -7,6 +8,8 @@ import {
   mobileSocialLinks,
   modalTitle,
   modalFooter,
+  dialogOverlay,
+  dialogContent,
 } from './headerStyles'
 
 const MobileContact = () => {
@@ -19,57 +22,54 @@ const MobileContact = () => {
   const mailTo = `mailto:${email}?subject=${subject}&body=${body}`
 
   return (
-    <>
-      <Button
-        variant="info"
-        css={mobileContactButton}
-        onClick={(): void => setOpen(true)}
-      >
-        Contact
-      </Button>
-
-      <Modal
-        show={open}
-        onHide={(): void => setOpen(false)}
-        size="sm"
-        css={mobileContactModal}
-        centered
-      >
-        <div css={modalContent}>
-          <Modal.Title css={modalTitle}>Contact Me</Modal.Title>
-          <Modal.Body css={mobileSocialLinks}>
-            <Button variant="outline-primary">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://www.linkedin.com/in/mason-chinkin/"
-              >
-                <i className="fab fa-linkedin" /> <span>LinkedIn</span>
-              </a>
-            </Button>
-            <Button variant="outline-primary">
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://github.com/MasonChinkin"
-              >
-                <i className="fab fa-github" /> <span>Github</span>
-              </a>
-            </Button>
-            <Button variant="outline-primary">
-              <a target="_blank" rel="noopener noreferrer" href={mailTo}>
-                <i className="fas fa-envelope" /> <span>Email</span>
-              </a>
-            </Button>
-          </Modal.Body>
-          <Modal.Footer css={modalFooter}>
-            <Button variant="secondary" onClick={(): void => setOpen(false)}>
-              Close
-            </Button>
-          </Modal.Footer>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger asChild>
+        <div css={mobileContactButton}>
+          <Button variant="info" onClick={(): void => setOpen(true)}>
+            Contact
+          </Button>
         </div>
-      </Modal>
-    </>
+      </Dialog.Trigger>
+
+      <Dialog.Portal>
+        <Dialog.Overlay css={dialogOverlay} />
+        <Dialog.Content css={[dialogContent, mobileContactModal]}>
+          <div css={modalContent}>
+            <Dialog.Title css={modalTitle}>Contact Me</Dialog.Title>
+            <div css={mobileSocialLinks}>
+              <Button variant="outline-primary">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://www.linkedin.com/in/mason-chinkin/"
+                >
+                  <i className="fab fa-linkedin" /> <span>LinkedIn</span>
+                </a>
+              </Button>
+              <Button variant="outline-primary">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/MasonChinkin"
+                >
+                  <i className="fab fa-github" /> <span>Github</span>
+                </a>
+              </Button>
+              <Button variant="outline-primary">
+                <a target="_blank" rel="noopener noreferrer" href={mailTo}>
+                  <i className="fas fa-envelope" /> <span>Email</span>
+                </a>
+              </Button>
+            </div>
+            <div css={modalFooter}>
+              <Button variant="secondary" onClick={(): void => setOpen(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
 
