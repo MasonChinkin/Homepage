@@ -1,10 +1,9 @@
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { Configuration } from 'webpack'
-import { getExternals, getTemplateParameters } from './externalizedLibs'
-
-const isProduction = process.env.NODE_ENV === 'production'
+import { ImportMapPlugin } from './webpack-importmap-plugin'
 
 const config: Configuration = {
   mode: 'production',
@@ -34,7 +33,7 @@ const config: Configuration = {
             loader: 'esbuild-loader',
             options: {
               loader: 'tsx',
-              target: 'es2015',
+              target: 'es2022',
               jsxImportSource: '@emotion/react',
             },
           },
@@ -47,7 +46,6 @@ const config: Configuration = {
     ],
   },
   externalsType: 'module',
-  externals: getExternals(),
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.base.html',
@@ -55,7 +53,38 @@ const config: Configuration = {
       filename: 'index.html',
       hash: true,
       scriptLoading: 'module',
-      templateParameters: getTemplateParameters(isProduction),
+    }),
+    new ImportMapPlugin([
+      { name: 'react', version: '19.2.0' },
+      { name: 'react', version: '19.2.0', path: 'jsx-runtime' },
+      { name: 'react-dom', version: '19.2.0', peers: ['react'] },
+      {
+        name: 'react-dom',
+        version: '19.2.0',
+        path: 'client',
+        peers: ['react'],
+      },
+      { name: 'd3', version: '7.9.0' },
+      {
+        name: 'framer-motion',
+        version: '12.23.24',
+        peers: ['react', 'react-dom'],
+      },
+      {
+        name: '@radix-ui/react-dialog',
+        version: '1.1.15',
+        peers: ['react', 'react-dom'],
+      },
+      { name: '@emotion/react', version: '11.14.0', peers: ['react'] },
+    ]),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: path.resolve(__dirname, 'tsconfig.json'),
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
     }),
   ],
 }

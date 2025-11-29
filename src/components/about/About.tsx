@@ -1,6 +1,6 @@
+import { heightTransitionWrapper, frostedStyle } from 'src/styles/utilityStyles'
 import AboutImg from './AboutImg'
 import { aboutContainer, aboutSection } from './aboutStyles'
-import { heightTransitionWrapper, frostedStyle } from 'src/styles/utilityStyles'
 
 const About = () => (
   <div css={heightTransitionWrapper}>
