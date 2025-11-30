@@ -19,6 +19,11 @@ const Root = () => {
           HydrateFallback={() => null}
           lazy={() => import('./components/d3/legacy/RedditVisualization')}
         />
+        <Route
+          path="/budget-sankey"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/legacy/BudgetSankey')}
+        />
       </>
     )
   )
