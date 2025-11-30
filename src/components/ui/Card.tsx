@@ -14,6 +14,8 @@ type CardImgProps = {
   src: string
   onLoad?: () => void
   className?: string
+  loading?: 'lazy' | 'eager'
+  decoding?: 'async' | 'sync' | 'auto'
 }
 
 type CardTitleProps = {
@@ -68,8 +70,21 @@ const Card = ({ children, className }: CardProps) => (
   </div>
 )
 
-const CardImg = ({ src, onLoad, className }: CardImgProps) => (
-  <img css={cardImgStyles} src={src} onLoad={onLoad} className={className} />
+const CardImg = ({
+  src,
+  onLoad,
+  className,
+  loading,
+  decoding,
+}: CardImgProps) => (
+  <img
+    css={cardImgStyles}
+    src={src}
+    onLoad={onLoad}
+    className={className}
+    loading={loading}
+    decoding={decoding}
+  />
 )
 
 const CardBody = ({ children, className }: CardBodyProps) => (

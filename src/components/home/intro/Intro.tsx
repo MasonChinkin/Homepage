@@ -39,6 +39,7 @@ const Intro = () => {
         onLoad={(): void => setImgLoaded(true)}
         alt="avatar of Mason Chinkin"
         src={avatarImg}
+        decoding="async"
       />
     </section>
   )

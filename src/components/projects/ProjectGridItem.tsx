@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Card from 'src/components/ui/Card'
 import Button from 'src/components/ui/Button'
-import { ProjectType } from './projectList'
+import Card from 'src/components/ui/Card'
 import { loadingImg } from 'src/styles/utilityStyles'
+import { ProjectType } from './projectList'
 import {
   projectCard,
   projectCardBody,
@@ -39,6 +39,8 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
         css={[projectCardImg, !imgLoaded && loadingImg]}
         src={img}
         onLoad={(): void => setImgLoaded(true)}
+        loading="lazy"
+        decoding="async"
       />
       <Card.Body css={projectCardBody}>
         <Card.Title css={projectCardTitle}>{title}</Card.Title>
