@@ -33,7 +33,7 @@ export const d3Projects: ProjectType[] = [
     title: 'Federal Budget Sankey',
     description:
       'Sankeys were underutilized as a tool to communicate fiscal policy.',
-    externalLink: 'https://masonchinkin.github.io/budgetSankey/',
+    internalLink: '/budget-sankey',
     githubLink: 'https://github.com/MasonChinkin/budgetSankey',
   },
   {

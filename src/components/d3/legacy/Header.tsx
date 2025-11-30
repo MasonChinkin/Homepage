@@ -8,7 +8,11 @@ const Header = ({ title }: HeaderProps) => {
   return (
     <header>
       <h1>{title}</h1>
-      <button onClick={() => navigate('/')} type="button">
+      <button
+        css={{ cursor: 'pointer' }}
+        onClick={() => navigate('/d3')}
+        type="button"
+      >
         <i className="fas fa-long-arrow-alt-left" /> Back
       </button>
     </header>

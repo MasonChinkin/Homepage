@@ -7,6 +7,7 @@
       "dependencies": {
         "@emotion/react": "^11.14.0",
         "d3": "^7.9.0",
+        "d3-simple-slider": "^2.0.0",
         "framer-motion": "^12.23.24",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
@@ -845,6 +846,8 @@
     "d3-selection": ["d3-selection@3.0.0", "", {}, "sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ=="],
 
     "d3-shape": ["d3-shape@3.2.0", "", { "dependencies": { "d3-path": "^3.1.0" } }, "sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA=="],
+
+    "d3-simple-slider": ["d3-simple-slider@2.0.0", "", { "dependencies": { "d3-array": "3", "d3-axis": "3", "d3-dispatch": "3", "d3-drag": "3", "d3-ease": "3", "d3-scale": "4", "d3-selection": "3", "d3-transition": "3" } }, "sha512-v0SBx52aaktpMnNrEfDYrE9mOcSebWPVY0ay+dIWr3CR5zaTIRrNgbUGEhMo+N46M0Uc6u9b503L+/c7qVdWJw=="],
 
     "d3-time": ["d3-time@3.1.0", "", { "dependencies": { "d3-array": "2 - 3" } }, "sha512-VqKjzBLejbSMT4IgbmVgDjpkYrNWUYJnbCGo874u7MMKIWsILRX+OpX/gTk8MqjpT1A/c6HY2dCA77ZN0lkQ2Q=="],
 
