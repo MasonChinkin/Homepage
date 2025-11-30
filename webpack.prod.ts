@@ -1,3 +1,4 @@
+import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
@@ -26,12 +27,46 @@ const config: Configuration = {
   optimization: {
     splitChunks: {
       chunks: 'all',
+      maxInitialRequests: Infinity,
+      minSize: 20000,
       cacheGroups: {
+        // Emotion packages - CSS-in-JS (heavy)
+        emotion: {
+          test: /[\\/]node_modules[\\/]@emotion[\\/]/,
+          name: 'emotion',
+          priority: 40,
+        },
+        // Router packages
+        router: {
+          test: /[\\/]node_modules[\\/]react-router/,
+          name: 'router',
+          priority: 35,
+        },
+        // D3 visualization packages (heavy)
+        d3: {
+          test: /[\\/]node_modules[\\/]d3/,
+          name: 'd3',
+          priority: 30,
+        },
+        // Animation packages
+        animation: {
+          test: /[\\/]node_modules[\\/](framer-motion|react-css-transition-replace)/,
+          name: 'animation',
+          priority: 25,
+        },
+        // Radix UI components
+        radix: {
+          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+          name: 'radix',
+          priority: 20,
+        },
+        // Remaining vendor code
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
           priority: 10,
         },
+        // Common code shared across chunks
         common: {
           minChunks: 2,
           priority: 5,
@@ -73,6 +108,11 @@ const config: Configuration = {
       filename: 'index.html',
       hash: true,
       scriptLoading: 'module',
+      inject: 'head',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+      },
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },
@@ -85,6 +125,12 @@ const config: Configuration = {
         peers: ['react'],
       },
     ]),
+    new PreloadWebpackPlugin({
+      rel: 'modulepreload',
+      as: 'script',
+      include: 'initial',
+      fileBlacklist: [/\.map$/, /\.png$/, /\.webp$/, /\.jpg$/],
+    }),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
