@@ -75,16 +75,17 @@ export class ImportMapPlugin {
             },
           }
 
-          // CRITICAL: Insert import map BEFORE all module scripts
+          // CRITICAL: Insert import map BEFORE all module scripts and preloads
           // This ensures the import map is parsed before any modules execute,
-          // even when scripts are loaded from cache
+          // even when scripts are loaded from cache.
+          // Preload links come AFTER the import map to prevent race conditions.
           data.headTags = [
             ...data.headTags.filter(
               (tag) =>
                 tag.tagName !== 'script' || tag.attributes?.type !== 'module'
             ),
-            ...preloadLinks,
             importMapTag,
+            ...preloadLinks,
             ...data.headTags.filter(
               (tag) =>
                 tag.tagName === 'script' && tag.attributes?.type === 'module'
