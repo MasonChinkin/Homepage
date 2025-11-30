@@ -23,6 +23,23 @@ const config: Configuration = {
   cache: {
     type: 'filesystem',
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          priority: 10,
+        },
+        common: {
+          minChunks: 2,
+          priority: 5,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
     extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp', '.svg'],
