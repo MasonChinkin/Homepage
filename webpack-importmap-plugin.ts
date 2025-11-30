@@ -1,4 +1,4 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin'
+import HtmlWebpackPlugin, { HtmlTagObject } from 'html-webpack-plugin'
 import { Compiler, ExternalItem } from 'webpack'
 
 interface ImportMapModule {
@@ -37,36 +37,59 @@ export class ImportMapPlugin {
 
     // Hook into HtmlWebpackPlugin to inject import map and preload links
     compiler.hooks.compilation.tap('ImportMapPlugin', (compilation) => {
-      HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
+      HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync(
         'ImportMapPlugin',
         (data, cb) => {
           const isDev = compiler.options.mode === 'development'
 
           // Build import map
           const imports: Record<string, string> = {}
-          const preloadLinks: string[] = []
+          const preloadLinks: HtmlTagObject[] = []
 
           this.modules.forEach((mod) => {
             const moduleName = mod.path ? `${mod.name}/${mod.path}` : mod.name
             const url = this.getUrl(mod, isDev)
             imports[moduleName] = url
 
-            // Generate preload link
-            preloadLinks.push(
-              `    <link rel="preload" href="${url}" as="script" crossorigin />`
-            )
+            // Generate preload link tag
+            preloadLinks.push({
+              tagName: 'link',
+              voidTag: true,
+              meta: {},
+              attributes: {
+                rel: 'preload',
+                href: url,
+                as: 'script',
+                crossorigin: 'anonymous',
+              },
+            })
           })
 
-          const importMapScript = `<script type="importmap">
-      ${JSON.stringify({ imports }, null, 2)}
-    </script>`
+          const importMapTag: HtmlTagObject = {
+            tagName: 'script',
+            innerHTML: `\n      ${JSON.stringify({ imports }, null, 2)}\n    `,
+            voidTag: false,
+            meta: {},
+            attributes: {
+              type: 'importmap',
+            },
+          }
 
-          // Inject preload links and import map into head
-          const preloadSection = preloadLinks.join('\n')
-          data.html = data.html.replace(
-            '</head>',
-            `${preloadSection}\n\n${importMapScript}\n  </head>`
-          )
+          // CRITICAL: Insert import map BEFORE all module scripts
+          // This ensures the import map is parsed before any modules execute,
+          // even when scripts are loaded from cache
+          data.headTags = [
+            ...data.headTags.filter(
+              (tag) =>
+                tag.tagName !== 'script' || tag.attributes?.type !== 'module'
+            ),
+            ...preloadLinks,
+            importMapTag,
+            ...data.headTags.filter(
+              (tag) =>
+                tag.tagName === 'script' && tag.attributes?.type === 'module'
+            ),
+          ]
 
           cb(null, data)
         }
