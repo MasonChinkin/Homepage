@@ -23,29 +23,6 @@ const config: Configuration = {
   cache: {
     type: 'filesystem',
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          priority: 10,
-        },
-        emotion: {
-          test: /[\\/]node_modules[\\/]@emotion[\\/]/,
-          name: 'emotion',
-          priority: 20,
-        },
-        router: {
-          test: /[\\/]node_modules[\\/]react-router/,
-          name: 'router',
-          priority: 20,
-        },
-      },
-    },
-    runtimeChunk: 'single',
-  },
   resolve: {
     plugins: [new TsconfigPathsPlugin()],
     extensions: ['.ts', '.tsx', '.js', '.jpg', '.png', '.webp', '.svg'],
@@ -90,15 +67,9 @@ const config: Configuration = {
         path: 'client',
         peers: ['react'],
       },
-      { name: 'd3', version: '7.9.0' },
       {
         name: 'framer-motion',
         version: '12.23.24',
-        peers: ['react', 'react-dom'],
-      },
-      {
-        name: '@radix-ui/react-dialog',
-        version: '1.1.15',
         peers: ['react', 'react-dom'],
       },
       { name: '@emotion/react', version: '11.14.0', peers: ['react'] },

@@ -1,12 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import budgetSankeyWebp from 'src/static/animated/budget-sankey.webp'
-import redditWebp from 'src/static/animated/reddit-visualization.webp'
-import avatarImg from 'src/static/images/avatar.jpg'
-import budgetSankeyImg from 'src/static/images/budget-dashboard.jpg'
-import networkImg from 'src/static/images/network.png'
-import redditImg from 'src/static/images/reddit-visualization.png'
 import Background from './Background'
 import About from './about/About'
 import Header from './header/Header'
@@ -27,34 +21,6 @@ export const Component = () => {
   ]
 
   const location = useLocation()
-
-  // Preload critical images for home page using native browser preloading
-  useEffect(() => {
-    const imagesToPreload = [
-      avatarImg,
-      redditWebp,
-      redditImg,
-      budgetSankeyWebp,
-      budgetSankeyImg,
-      networkImg,
-    ]
-
-    const links: HTMLLinkElement[] = []
-
-    imagesToPreload.forEach((src) => {
-      const link = document.createElement('link')
-      link.rel = 'preload'
-      link.as = 'image'
-      link.href = src
-      document.head.appendChild(link)
-      links.push(link)
-    })
-
-    // Cleanup: remove preload links when component unmounts
-    return () => {
-      links.forEach((link) => document.head.removeChild(link))
-    }
-  }, [])
 
   return (
     <>
