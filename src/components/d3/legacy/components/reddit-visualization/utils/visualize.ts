@@ -19,24 +19,15 @@ function getURL() {
 export async function visualize(vizType) {
   let dataset
   if (!sessionStorage.getItem('dataset')) {
-    const url = getURL()
+    const redditUrl = getURL()
+    const proxyUrl = `/api/reddit-proxy?url=${encodeURIComponent(redditUrl)}`
     let json
     try {
-      json = await fetch(url, {
-        headers: {
-          'cache-control':
-            'private, s-maxage=0, max-age=0, must-revalidate, no-store',
-        },
-      }).then((res) => res.json())
+      json = await fetch(proxyUrl).then((res) => res.json())
       catchErrors(json)
     } catch (err) {
       console.log(err) // eslint-disable-line
       subredditNotFound()
-      console.clear() // eslint-disable-line
-      // eslint-disable-next-line
-      console.log(
-        'console cleared to protect your eyes from a cors error cause by fetching from non-existent subreddit'
-      )
     }
 
     if (json === undefined) return
