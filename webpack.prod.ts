@@ -25,6 +25,8 @@ const config: Configuration = {
     type: 'filesystem',
   },
   optimization: {
+    moduleIds: 'deterministic',
+    runtimeChunk: 'single',
     splitChunks: {
       chunks: 'all',
       maxInitialRequests: Infinity,
