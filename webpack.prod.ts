@@ -84,12 +84,6 @@ const config: Configuration = {
         path: 'client',
         peers: ['react'],
       },
-      {
-        name: 'framer-motion',
-        version: '12.23.24',
-        peers: ['react', 'react-dom'],
-      },
-      { name: '@emotion/react', version: '11.14.0', peers: ['react'] },
     ]),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
