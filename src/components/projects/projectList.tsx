@@ -58,6 +58,6 @@ export const d3Projects: ProjectType[] = [
     img: gdpImg,
     title: 'Interactive Breakdown of US GDP Growth',
     description: 'The first thing I made after learning the basics of d3.js.',
-    externalLink: 'https://masonchinkin.github.io/transitionStackedBarChart/',
+    internalLink: '/gdp-growth',
   },
 ]

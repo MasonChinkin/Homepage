@@ -39,6 +39,11 @@ const Root = () => {
           HydrateFallback={() => null}
           lazy={() => import('./components/d3/legacy/CongressMap')}
         />
+        <Route
+          path="/gdp-growth"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/legacy/GdpGrowth')}
+        />
       </>
     )
   )
