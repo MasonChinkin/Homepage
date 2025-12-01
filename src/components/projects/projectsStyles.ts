@@ -70,7 +70,7 @@ export const projectCardBody = css({
   display: 'flex',
   justifyContent: 'space-between',
   flexDirection: 'column',
-  padding: '0.6rem',
+  padding: '1rem 0.6rem',
 })
 
 export const projectCardText = css({
@@ -92,20 +92,4 @@ export const projectCardTitle = css({
 export const projectCardImg = css({
   height: '180px',
   objectFit: 'cover',
-})
-
-export const projectCardLinks = css({
-  display: 'flex',
-
-  button: {
-    margin: '0.6rem 1rem 0 0',
-  },
-
-  [mediaQueries.mobile]: {
-    flexDirection: 'row-reverse',
-
-    button: {
-      margin: '0.6rem 0 0 1rem',
-    },
-  },
 })

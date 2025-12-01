@@ -1,6 +1,6 @@
+import { css } from '@emotion/react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Button from 'src/components/ui/Button'
 import Card from 'src/components/ui/Card'
 import { loadingImg } from 'src/styles/utilityStyles'
 import { ProjectType } from './projectList'
@@ -8,7 +8,6 @@ import {
   projectCard,
   projectCardBody,
   projectCardImg,
-  projectCardLinks,
   projectCardText,
   projectCardTitle,
 } from './projectsStyles'
@@ -17,24 +16,25 @@ type ProjectGridItemProps = {
   project: ProjectType
 }
 
+const clickableCard = css({
+  cursor: 'pointer',
+})
+
 const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
-  const { img, title, description, internalLink, externalLink, githubLink } =
-    project
+  const { img, title, description, internalLink, externalLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
   const navigate = useNavigate()
 
-  const handleLink = internalLink ? (
-    <Button variant="primary" onClick={() => navigate(internalLink)}>
-      Live
-    </Button>
-  ) : (
-    <a rel="noopener noreferrer" href={externalLink}>
-      <Button variant="primary">Live</Button>
-    </a>
-  )
+  const handleClick = () => {
+    if (internalLink) {
+      navigate(internalLink)
+    } else if (externalLink) {
+      window.open(externalLink, '_blank', 'noopener,noreferrer')
+    }
+  }
 
   return (
-    <Card css={projectCard}>
+    <Card css={[projectCard, clickableCard]} onClick={handleClick}>
       <Card.Img
         css={[projectCardImg, !imgLoaded && loadingImg]}
         src={img}
@@ -45,14 +45,6 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
       <Card.Body css={projectCardBody}>
         <Card.Title css={projectCardTitle}>{title}</Card.Title>
         <Card.Text css={projectCardText}>{description}</Card.Text>
-        <div css={projectCardLinks}>
-          {handleLink}
-          {githubLink && (
-            <a href={githubLink}>
-              <Button variant="secondary">Repo</Button>
-            </a>
-          )}
-        </div>
       </Card.Body>
     </Card>
   )

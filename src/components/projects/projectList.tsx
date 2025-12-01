@@ -14,7 +14,6 @@ export type ProjectType = {
   description: string
   internalLink?: string
   externalLink?: string
-  githubLink?: string
 }
 
 export const d3Projects: ProjectType[] = [
@@ -25,7 +24,6 @@ export const d3Projects: ProjectType[] = [
     description:
       "Fun visualization of the data fetched by putting '.json' at the end of most reddit URLs.",
     internalLink: '/reddit-visualization',
-    githubLink: 'https://github.com/MasonChinkin/d3-projects',
   },
   {
     img: budgetSankeyImg,
@@ -34,7 +32,6 @@ export const d3Projects: ProjectType[] = [
     description:
       'Sankeys were underutilized as a tool to communicate fiscal policy.',
     internalLink: '/budget-sankey',
-    githubLink: 'https://github.com/MasonChinkin/budgetSankey',
   },
   {
     img: networkImg,
@@ -42,7 +39,6 @@ export const d3Projects: ProjectType[] = [
     description:
       'Interactive D3 force layout showing the complicated web of relationships in 2014 Syria.',
     internalLink: '/syria-network',
-    githubLink: 'https://github.com/MasonChinkin/Diplomatic_Web_in_Syria',
   },
   {
     img: forceClustersImg,
@@ -50,7 +46,6 @@ export const d3Projects: ProjectType[] = [
     description:
       'Little animation I made to help understand d3.js force clusters',
     internalLink: '/force-cluster',
-    githubLink: 'https://github.com/MasonChinkin/forceClusterAnimation',
   },
   {
     img: congressMapImg,
@@ -58,8 +53,6 @@ export const d3Projects: ProjectType[] = [
     description:
       'Mapping 2016 congressional results. I cringe looking back at how I made the tooltip...',
     internalLink: '/congress-map',
-    githubLink:
-      'https://github.com/MasonChinkin/2016_Congressional_Election_Map',
   },
   {
     img: gdpImg,
