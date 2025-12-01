@@ -24,6 +24,21 @@ const Root = () => {
           HydrateFallback={() => null}
           lazy={() => import('./components/d3/legacy/BudgetSankey')}
         />
+        <Route
+          path="/syria-network"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/legacy/SyriaNetwork')}
+        />
+        <Route
+          path="/force-cluster"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/legacy/ForceCluster')}
+        />
+        <Route
+          path="/congress-map"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/legacy/CongressMap')}
+        />
       </>
     )
   )

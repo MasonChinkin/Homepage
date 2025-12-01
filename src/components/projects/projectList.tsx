@@ -41,7 +41,7 @@ export const d3Projects: ProjectType[] = [
     title: 'The Diplomatic Web in Syria',
     description:
       'Interactive D3 force layout showing the complicated web of relationships in 2014 Syria.',
-    externalLink: 'https://masonchinkin.github.io/Diplomatic_Web_in_Syria/',
+    internalLink: '/syria-network',
     githubLink: 'https://github.com/MasonChinkin/Diplomatic_Web_in_Syria',
   },
   {
@@ -49,7 +49,7 @@ export const d3Projects: ProjectType[] = [
     title: 'Playing with Force-Clusters',
     description:
       'Little animation I made to help understand d3.js force clusters',
-    externalLink: 'https://masonchinkin.github.io/forceClusterAnimation/',
+    internalLink: '/force-cluster',
     githubLink: 'https://github.com/MasonChinkin/forceClusterAnimation',
   },
   {
@@ -57,8 +57,9 @@ export const d3Projects: ProjectType[] = [
     title: '2016 Congressional Election Results',
     description:
       'Mapping 2016 congressional results. I cringe looking back at how I made the tooltip...',
-    externalLink:
-      'https://masonchinkin.github.io/2016_Congressional_Election_Map/',
+    internalLink: '/congress-map',
+    githubLink:
+      'https://github.com/MasonChinkin/2016_Congressional_Election_Map',
   },
   {
     img: gdpImg,
