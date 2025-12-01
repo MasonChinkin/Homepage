@@ -78,18 +78,40 @@ export class ImportMapPlugin {
           // CRITICAL: Insert import map BEFORE all module scripts and preloads
           // This ensures the import map is parsed before any modules execute,
           // even when scripts are loaded from cache.
-          // Preload links come AFTER the import map to prevent race conditions.
-          data.headTags = [
+          // All preload links (both from this plugin and PreloadWebpackPlugin)
+          // must come AFTER the import map to prevent race conditions.
+
+          // Filter out module scripts and ALL preload links
+          const nonModuleNonPreloadTags = data.headTags.filter(
+            (tag) =>
+              (tag.tagName !== 'script' || tag.attributes?.type !== 'module') &&
+              (tag.tagName !== 'link' ||
+                (tag.attributes?.rel !== 'preload' &&
+                  tag.attributes?.rel !== 'modulepreload'))
+          )
+
+          // Collect all preload links (from PreloadWebpackPlugin and this plugin)
+          const allPreloadLinks = [
             ...data.headTags.filter(
               (tag) =>
-                tag.tagName !== 'script' || tag.attributes?.type !== 'module'
+                tag.tagName === 'link' &&
+                (tag.attributes?.rel === 'preload' ||
+                  tag.attributes?.rel === 'modulepreload')
             ),
-            importMapTag,
             ...preloadLinks,
-            ...data.headTags.filter(
-              (tag) =>
-                tag.tagName === 'script' && tag.attributes?.type === 'module'
-            ),
+          ]
+
+          // Collect module scripts
+          const moduleScripts = data.headTags.filter(
+            (tag) =>
+              tag.tagName === 'script' && tag.attributes?.type === 'module'
+          )
+
+          data.headTags = [
+            ...nonModuleNonPreloadTags,
+            importMapTag,
+            ...allPreloadLinks,
+            ...moduleScripts,
           ]
 
           cb(null, data)
