@@ -3,6 +3,7 @@ import { css } from '@emotion/react'
 type CardProps = {
   children: React.ReactNode
   className?: string
+  onClick?: () => void
 }
 
 type CardBodyProps = {
@@ -64,8 +65,8 @@ const cardImgStyles = css({
   borderTopRightRadius: 'calc(0.25rem - 1px)',
 })
 
-const Card = ({ children, className }: CardProps) => (
-  <div css={cardStyles} className={className}>
+const Card = ({ children, className, onClick }: CardProps) => (
+  <div css={cardStyles} className={className} onClick={onClick}>
     {children}
   </div>
 )

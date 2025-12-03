@@ -1,4 +1,5 @@
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
@@ -14,6 +15,7 @@ const config: Configuration = {
     filename: '[name].[contenthash:8].js',
     chunkFilename: '[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     module: true,
     chunkFormat: 'module',
     clean: true,
@@ -115,6 +117,9 @@ const config: Configuration = {
         removeComments: true,
         collapseWhitespace: true,
       },
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: 'public/_redirects', to: '.' }],
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },

@@ -14,7 +14,6 @@ export type ProjectType = {
   description: string
   internalLink?: string
   externalLink?: string
-  githubLink?: string
 }
 
 export const d3Projects: ProjectType[] = [
@@ -25,7 +24,6 @@ export const d3Projects: ProjectType[] = [
     description:
       "Fun visualization of the data fetched by putting '.json' at the end of most reddit URLs.",
     internalLink: '/reddit-visualization',
-    githubLink: 'https://github.com/MasonChinkin/d3-projects',
   },
   {
     img: budgetSankeyImg,
@@ -34,36 +32,32 @@ export const d3Projects: ProjectType[] = [
     description:
       'Sankeys were underutilized as a tool to communicate fiscal policy.',
     internalLink: '/budget-sankey',
-    githubLink: 'https://github.com/MasonChinkin/budgetSankey',
   },
   {
     img: networkImg,
     title: 'The Diplomatic Web in Syria',
     description:
       'Interactive D3 force layout showing the complicated web of relationships in 2014 Syria.',
-    externalLink: 'https://masonchinkin.github.io/Diplomatic_Web_in_Syria/',
-    githubLink: 'https://github.com/MasonChinkin/Diplomatic_Web_in_Syria',
+    internalLink: '/syria-network',
   },
   {
     img: forceClustersImg,
     title: 'Playing with Force-Clusters',
     description:
       'Little animation I made to help understand d3.js force clusters',
-    externalLink: 'https://masonchinkin.github.io/forceClusterAnimation/',
-    githubLink: 'https://github.com/MasonChinkin/forceClusterAnimation',
+    internalLink: '/force-cluster',
   },
   {
     img: congressMapImg,
     title: '2016 Congressional Election Results',
     description:
       'Mapping 2016 congressional results. I cringe looking back at how I made the tooltip...',
-    externalLink:
-      'https://masonchinkin.github.io/2016_Congressional_Election_Map/',
+    internalLink: '/congress-map',
   },
   {
     img: gdpImg,
     title: 'Interactive Breakdown of US GDP Growth',
     description: 'The first thing I made after learning the basics of d3.js.',
-    externalLink: 'https://masonchinkin.github.io/transitionStackedBarChart/',
+    internalLink: '/gdp-growth',
   },
 ]
