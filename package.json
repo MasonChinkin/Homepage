@@ -33,7 +33,6 @@
     "@types/react": "^19.2.6",
     "@types/react-dom": "^19.2.3",
     "@vitest/browser": "^4.0.13",
-    "@vue/preload-webpack-plugin": "^2.0.0",
     "bun-types": "latest",
     "copy-webpack-plugin": "^13.0.1",
     "esbuild-loader": "^4.4.0",

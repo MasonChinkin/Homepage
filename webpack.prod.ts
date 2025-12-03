@@ -1,4 +1,3 @@
-import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -119,7 +118,10 @@ const config: Configuration = {
       },
     }),
     new CopyWebpackPlugin({
-      patterns: [{ from: 'public/_redirects', to: '.' }],
+      patterns: [
+        { from: 'public/_headers', to: '.' },
+        // Note: _redirects removed - Cloudflare Pages automatically serves index.html for 404s
+      ],
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },
@@ -132,16 +134,6 @@ const config: Configuration = {
         peers: ['react'],
       },
     ]),
-    // DISABLED: modulepreload causes race condition with import map
-    // The browser can start executing preloaded modules before the import map
-    // is parsed, causing "Failed to resolve module specifier" errors.
-    // Regular <script type="module"> tags are sufficient and won't race.
-    // new PreloadWebpackPlugin({
-    //   rel: 'modulepreload',
-    //   as: 'script',
-    //   include: 'initial',
-    //   fileBlacklist: [/\.map$/, /\.png$/, /\.webp$/, /\.jpg$/],
-    // }),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
