@@ -118,7 +118,10 @@ const config: Configuration = {
       },
     }),
     new CopyWebpackPlugin({
-      patterns: [{ from: 'public/_headers', to: '.' }],
+      patterns: [
+        { from: 'public/_headers', to: '.' },
+        { from: 'public/data', to: 'data' },
+      ],
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },
