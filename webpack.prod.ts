@@ -1,4 +1,3 @@
-import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
@@ -119,7 +118,7 @@ const config: Configuration = {
       },
     }),
     new CopyWebpackPlugin({
-      patterns: [{ from: 'public/_redirects', to: '.' }],
+      patterns: [{ from: 'public/_headers', to: '.' }],
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },
@@ -132,12 +131,6 @@ const config: Configuration = {
         peers: ['react'],
       },
     ]),
-    new PreloadWebpackPlugin({
-      rel: 'modulepreload',
-      as: 'script',
-      include: 'initial',
-      fileBlacklist: [/\.map$/, /\.png$/, /\.webp$/, /\.jpg$/],
-    }),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
