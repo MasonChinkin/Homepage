@@ -15,6 +15,7 @@ const config: Configuration = {
     filename: '[name].[contenthash:8].js',
     chunkFilename: '[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
     module: true,
     chunkFormat: 'module',
     clean: true,
