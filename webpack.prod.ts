@@ -132,12 +132,16 @@ const config: Configuration = {
         peers: ['react'],
       },
     ]),
-    new PreloadWebpackPlugin({
-      rel: 'modulepreload',
-      as: 'script',
-      include: 'initial',
-      fileBlacklist: [/\.map$/, /\.png$/, /\.webp$/, /\.jpg$/],
-    }),
+    // DISABLED: modulepreload causes race condition with import map
+    // The browser can start executing preloaded modules before the import map
+    // is parsed, causing "Failed to resolve module specifier" errors.
+    // Regular <script type="module"> tags are sufficient and won't race.
+    // new PreloadWebpackPlugin({
+    //   rel: 'modulepreload',
+    //   as: 'script',
+    //   include: 'initial',
+    //   fileBlacklist: [/\.map$/, /\.png$/, /\.webp$/, /\.jpg$/],
+    // }),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
