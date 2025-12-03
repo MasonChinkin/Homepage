@@ -118,10 +118,7 @@ const config: Configuration = {
       },
     }),
     new CopyWebpackPlugin({
-      patterns: [
-        { from: 'public/_headers', to: '.' },
-        // Note: _redirects removed - Cloudflare Pages automatically serves index.html for 404s
-      ],
+      patterns: [{ from: 'public/_headers', to: '.' }],
     }),
     new ImportMapPlugin([
       { name: 'react', version: '19.2.0' },
