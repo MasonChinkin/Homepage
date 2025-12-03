@@ -9,6 +9,10 @@ const config = merge<
   devServer: {
     open: true,
     historyApiFallback: true,
+    static: {
+      directory: './public',
+      publicPath: '/',
+    },
   },
   watchOptions: {
     ignored: /node_modules/,
