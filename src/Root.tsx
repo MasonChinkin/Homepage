@@ -44,6 +44,11 @@ const Root = () => {
           HydrateFallback={() => null}
           lazy={() => import('./components/d3/legacy/GdpGrowth')}
         />
+        <Route
+          path="/d3/template"
+          HydrateFallback={() => null}
+          lazy={() => import('./components/d3/template/D3Template')}
+        />
       </>
     )
   )
