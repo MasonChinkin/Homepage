@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from 'src/components/ui/Button'
+import { socialLinks } from './contactConstants'
 import {
   mobileContactButton,
   modalContent,
@@ -13,12 +14,6 @@ import {
 
 const MobileContact = () => {
   const [open, setOpen] = useState<boolean>(false)
-
-  const email = 'mason.chinkin@gmail.com'
-  const subject = 'Hi Mason'
-  const body = "I would like to hire you and payscoy you lots o' money!"
-
-  const mailTo = `mailto:${email}?subject=${subject}&body=${body}`
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -65,29 +60,13 @@ const MobileContact = () => {
                 Contact Me
               </h2>
               <div css={mobileSocialLinks}>
-                <Button variant="outline-primary">
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://www.linkedin.com/in/mason-chinkin/"
-                  >
-                    <i className="fab fa-linkedin" /> <span>LinkedIn</span>
-                  </a>
-                </Button>
-                <Button variant="outline-primary">
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://github.com/MasonChinkin"
-                  >
-                    <i className="fab fa-github" /> <span>Github</span>
-                  </a>
-                </Button>
-                <Button variant="outline-primary">
-                  <a target="_blank" rel="noopener noreferrer" href={mailTo}>
-                    <i className="fas fa-envelope" /> <span>Email</span>
-                  </a>
-                </Button>
+                {socialLinks.map(({ href, icon, label }) => (
+                  <Button key={label} variant="outline-primary">
+                    <a target="_blank" rel="noopener noreferrer" href={href}>
+                      <i className={icon} /> <span>{label}</span>
+                    </a>
+                  </Button>
+                ))}
               </div>
               <div css={modalFooter}>
                 <Button

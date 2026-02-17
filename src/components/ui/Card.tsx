@@ -13,6 +13,7 @@ type CardBodyProps = {
 
 type CardImgProps = {
   src: string
+  alt: string
   onLoad?: () => void
   className?: string
   loading?: 'lazy' | 'eager'
@@ -66,13 +67,28 @@ const cardImgStyles = css({
 })
 
 const Card = ({ children, className, onClick }: CardProps) => (
-  <div css={cardStyles} className={className} onClick={onClick}>
+  <div
+    css={cardStyles}
+    className={className}
+    onClick={onClick}
+    {...(onClick && {
+      role: 'button' as const,
+      tabIndex: 0,
+      onKeyDown: (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      },
+    })}
+  >
     {children}
   </div>
 )
 
 const CardImg = ({
   src,
+  alt,
   onLoad,
   className,
   loading,
@@ -81,6 +97,7 @@ const CardImg = ({
   <img
     css={cardImgStyles}
     src={src}
+    alt={alt}
     onLoad={onLoad}
     className={className}
     loading={loading}

@@ -38,6 +38,7 @@ const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
       <Card.Img
         css={[projectCardImg, !imgLoaded && loadingImg]}
         src={img}
+        alt={title}
         onLoad={(): void => setImgLoaded(true)}
         loading="lazy"
         decoding="async"

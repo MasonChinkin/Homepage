@@ -1,9 +1,7 @@
-import { createRoot } from 'react-dom/client'
+import { render } from '@testing-library/react'
 import Background from './Background'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<Background />)
-  root.unmount()
+it('renders three star layers', () => {
+  const { container } = render(<Background />)
+  expect(container.querySelectorAll('div')).toHaveLength(3)
 })

@@ -1,9 +1,12 @@
-import { createRoot } from 'react-dom/client'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import D3ProjectGrid from './D3ProjectGrid'
 
-it('D3ProjectGrid renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<D3ProjectGrid />)
-  root.unmount()
+it('renders all project cards', () => {
+  render(
+    <MemoryRouter>
+      <D3ProjectGrid />
+    </MemoryRouter>
+  )
+  expect(screen.getAllByRole('button')).toHaveLength(6)
 })

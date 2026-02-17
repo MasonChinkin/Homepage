@@ -2,11 +2,12 @@ import { useState } from 'react'
 import aboutMeImg from 'src/static/images/about_me.png'
 import aboutMeMobileImg from 'src/static/images/about_me_mobile.png'
 import { loadingImg } from 'src/styles/utilityStyles'
-import { isPhone } from 'src/utils/device'
+import { useIsPhone } from 'src/utils/device'
 import { aboutImg, aboutImgLoading } from './aboutStyles'
 
 const AboutImg = () => {
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
+  const isPhone = useIsPhone()
 
   return (
     <img

@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { Configuration } from 'webpack'
+import pkg from './package.json'
 import { ImportMapPlugin } from './webpack-importmap-plugin'
 
 const config: Configuration = {
@@ -103,6 +104,9 @@ const config: Configuration = {
       },
     ],
   },
+  performance: {
+    assetFilter: (assetFilename: string) => assetFilename.endsWith('.js'),
+  },
   externalsType: 'module',
   plugins: [
     new HtmlWebpackPlugin({
@@ -124,12 +128,20 @@ const config: Configuration = {
       ],
     }),
     new ImportMapPlugin([
-      { name: 'react', version: '19.2.0' },
-      { name: 'react', version: '19.2.0', path: 'jsx-runtime' },
-      { name: 'react-dom', version: '19.2.0', peers: ['react'] },
+      { name: 'react', version: pkg.dependencies.react.replace(/^\^/, '') },
+      {
+        name: 'react',
+        version: pkg.dependencies.react.replace(/^\^/, ''),
+        path: 'jsx-runtime',
+      },
       {
         name: 'react-dom',
-        version: '19.2.0',
+        version: pkg.dependencies['react-dom'].replace(/^\^/, ''),
+        peers: ['react'],
+      },
+      {
+        name: 'react-dom',
+        version: pkg.dependencies['react-dom'].replace(/^\^/, ''),
         path: 'client',
         peers: ['react'],
       },

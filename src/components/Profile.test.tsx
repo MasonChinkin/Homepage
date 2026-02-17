@@ -1,16 +1,14 @@
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { Component as Profile } from './Profile'
 
-const component = (
-  <BrowserRouter>
-    <Profile />
-  </BrowserRouter>
-)
-
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(component)
-  root.unmount()
+it('renders the home route by default', () => {
+  render(
+    <MemoryRouter>
+      <Profile />
+    </MemoryRouter>
+  )
+  expect(
+    screen.getByRole('heading', { name: /mason chinkin/i })
+  ).toBeInTheDocument()
 })

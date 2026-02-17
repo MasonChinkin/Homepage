@@ -1,9 +1,12 @@
-import { createRoot } from 'react-dom/client'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import FeaturedProjects from './FeaturedProjects'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<FeaturedProjects />)
-  root.unmount()
+it('renders featured project items', () => {
+  render(
+    <MemoryRouter>
+      <FeaturedProjects />
+    </MemoryRouter>
+  )
+  expect(screen.getByText(/reddit visualization/i)).toBeInTheDocument()
 })

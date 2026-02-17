@@ -58,14 +58,6 @@ export const projectCard = css({
   },
 })
 
-export const projectCardMarginsOnly = css({
-  marginRight: '1rem',
-
-  [mediaQueries.phone]: {
-    margin: '1rem auto',
-  },
-})
-
 export const projectCardBody = css({
   display: 'flex',
   justifyContent: 'space-between',

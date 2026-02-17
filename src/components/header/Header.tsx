@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useIsMobile } from 'src/utils/device'
 import DesktopContact from './DesktopContact'
 import MobileContact from './MobileContact'
 import { navLinks, navLink, navLinkSelected } from './headerStyles'
 
 const Header = () => {
   const [scrolled, setScrolled] = useState<boolean>(false)
-  const isMobile: boolean = window.innerWidth <= 768
+  const isMobile = useIsMobile()
 
-  useEffect((): void => {
-    window.addEventListener('scroll', () => {
-      setScrolled(window.scrollY > 0)
-    })
-  }, [setScrolled])
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const styles = [
     navLinks.base,

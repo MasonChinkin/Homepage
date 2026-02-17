@@ -1,9 +1,9 @@
-import { createRoot } from 'react-dom/client'
+import { render, screen } from '@testing-library/react'
 import Intro from './Intro'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<Intro />)
-  root.unmount()
+it('renders name heading', () => {
+  render(<Intro />)
+  expect(
+    screen.getByRole('heading', { name: /mason chinkin/i })
+  ).toBeInTheDocument()
 })

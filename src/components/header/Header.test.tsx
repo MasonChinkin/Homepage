@@ -1,16 +1,10 @@
-import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { screen } from '@testing-library/react'
+import renderWithRouter from 'src/test/renderWithRouter'
 import Header from './Header'
 
-const component = (
-  <BrowserRouter>
-    <Header />
-  </BrowserRouter>
-)
-
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(component)
-  root.unmount()
+it('renders navigation links', () => {
+  renderWithRouter(<Header />)
+  expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: /about/i })).toBeInTheDocument()
+  expect(screen.getByRole('link', { name: /d3 projects/i })).toBeInTheDocument()
 })

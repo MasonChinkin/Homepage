@@ -10,7 +10,7 @@ import {
 } from 'src/components/home/featuredStyles'
 import { ProjectType } from 'src/components/projects/projectList'
 import { loadingImg } from 'src/styles/utilityStyles'
-import { isPhone } from 'src/utils/device'
+import { useIsPhone } from 'src/utils/device'
 
 type FeaturedProjectItemProps = {
   project: ProjectType
@@ -19,6 +19,7 @@ type FeaturedProjectItemProps = {
 const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   const { img, webp, title, description, externalLink, internalLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
+  const isPhone = useIsPhone()
 
   const content = (
     <>

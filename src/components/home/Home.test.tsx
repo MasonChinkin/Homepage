@@ -1,9 +1,14 @@
-import { createRoot } from 'react-dom/client'
+import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import Home from './Home'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<Home />)
-  root.unmount()
+it('renders home page content', () => {
+  render(
+    <MemoryRouter>
+      <Home />
+    </MemoryRouter>
+  )
+  expect(
+    screen.getByRole('heading', { name: /mason chinkin/i })
+  ).toBeInTheDocument()
 })

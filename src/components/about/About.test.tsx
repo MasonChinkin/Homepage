@@ -1,9 +1,7 @@
-import { createRoot } from 'react-dom/client'
+import { render, screen } from '@testing-library/react'
 import About from './About'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  const root = createRoot(div)
-  root.render(<About />)
-  root.unmount()
+it('renders About Me heading', () => {
+  render(<About />)
+  expect(screen.getByRole('heading', { name: /about me/i })).toBeInTheDocument()
 })
