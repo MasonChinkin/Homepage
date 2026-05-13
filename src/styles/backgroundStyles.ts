@@ -1,33 +1,11 @@
 import { css, keyframes } from '@emotion/react'
-
-// Generate box shadows for stars
-const generateStars = (count: number): string => {
-  const areaSizeX = 6016
-  const areaSizeY = 3384
-  const stars: string[] = []
-
-  for (let i = 0; i < count; i++) {
-    const x = Math.floor(Math.random() * areaSizeX)
-    const y = Math.floor(Math.random() * areaSizeY)
-    stars.push(`${x}px ${y}px #FFF`)
-  }
-
-  return stars.join(', ')
-}
-
-const shadowsSmall = generateStars(1000)
-const shadowsMedium = generateStars(400)
-const shadowsBig = generateStars(200)
+import { shadowsSmall, shadowsMedium, shadowsBig } from './starsData.generated'
 
 const areaSizeY = 3384
 
 const animStar = keyframes`
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-${areaSizeY}px);
-  }
+  from { transform: translateY(0px); }
+  to { transform: translateY(-${areaSizeY}px); }
 `
 
 export const starsSmall = css({
@@ -36,7 +14,6 @@ export const starsSmall = css({
   background: 'transparent',
   boxShadow: shadowsSmall,
   animation: `${animStar} 150s linear infinite`,
-
   '&:after': {
     content: '""',
     position: 'absolute',
@@ -54,7 +31,6 @@ export const starsMedium = css({
   background: 'transparent',
   boxShadow: shadowsMedium,
   animation: `${animStar} 300s linear infinite`,
-
   '&:after': {
     content: '""',
     position: 'absolute',
@@ -72,7 +48,6 @@ export const starsBig = css({
   background: 'transparent',
   boxShadow: shadowsBig,
   animation: `${animStar} 450s linear infinite`,
-
   '&:after': {
     content: '""',
     position: 'absolute',
