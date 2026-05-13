@@ -1,15 +1,15 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import { d3Projects } from 'src/components/projects/projectList'
+import { Router } from 'wouter'
 import ProjectGridItem from './ProjectGridItem'
 
 const project = d3Projects[0]
 
 it('renders project title and description', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <ProjectGridItem project={project} />
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByText(project.title)).toBeInTheDocument()
   expect(screen.getByText(project.description)).toBeInTheDocument()
@@ -17,9 +17,9 @@ it('renders project title and description', () => {
 
 it('card is clickable', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <ProjectGridItem project={project} />
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByRole('button')).toBeInTheDocument()
 })

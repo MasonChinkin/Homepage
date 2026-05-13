@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { createContext, useContext, useState, ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Moon, Sun } from 'src/components/ui/icons'
+import { useLocation } from 'wouter'
 
 // Theme Definitions
 export type ThemeMode = 'dark' | 'light'
@@ -57,7 +57,7 @@ interface D3LayoutProps {
 
 export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
   const [mode, setMode] = useState<ThemeMode>('dark')
-  const navigate = useNavigate()
+  const [, setLocation] = useLocation()
 
   const theme = themes[mode]
 
@@ -141,7 +141,7 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
         <header css={headerStyle}>
           <button
             css={backButtonStyle}
-            onClick={() => navigate('/d3')}
+            onClick={() => setLocation('/d3')}
             type="button"
           >
             <ArrowLeft aria-label="Back" /> Back

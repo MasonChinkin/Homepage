@@ -1,8 +1,8 @@
 import { css } from '@emotion/react'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Card from 'src/components/ui/Card'
 import { loadingImg } from 'src/styles/utilityStyles'
+import { useLocation } from 'wouter'
 import { ProjectType } from './projectList'
 import {
   projectCard,
@@ -23,11 +23,11 @@ const clickableCard = css({
 const ProjectGridItem = ({ project }: ProjectGridItemProps) => {
   const { img, title, description, internalLink, externalLink } = project
   const [imgLoaded, setImgLoaded] = useState<boolean>(false)
-  const navigate = useNavigate()
+  const [, setLocation] = useLocation()
 
   const handleClick = () => {
     if (internalLink) {
-      navigate(internalLink)
+      setLocation(internalLink)
     } else if (externalLink) {
       window.open(externalLink, '_blank', 'noopener,noreferrer')
     }

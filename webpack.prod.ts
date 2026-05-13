@@ -40,12 +40,6 @@ const config: Configuration = {
           name: 'emotion',
           priority: 40,
         },
-        // Router packages
-        router: {
-          test: /[\\/]node_modules[\\/]react-router/,
-          name: 'router',
-          priority: 35,
-        },
         // D3 submodule packages — per-route chunks (no fixed name; webpack
         // derives names from the importing chunk so each viz route ships
         // only the d3 submodules it actually uses)

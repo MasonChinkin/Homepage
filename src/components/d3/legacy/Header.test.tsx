@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'wouter'
 import LegacyHeader from './Header'
 
 it('renders the title', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <LegacyHeader title="Test Visualization" />
-    </MemoryRouter>
+    </Router>
   )
   expect(
     screen.getByRole('heading', { name: /test visualization/i })
@@ -15,9 +15,9 @@ it('renders the title', () => {
 
 it('renders a Back button', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <LegacyHeader title="Test" />
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
 })

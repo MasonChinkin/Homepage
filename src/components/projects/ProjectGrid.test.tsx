@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'wouter'
 import D3ProjectGrid from './D3ProjectGrid'
 
 it('renders all project cards', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <D3ProjectGrid />
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getAllByRole('button')).toHaveLength(6)
 })
