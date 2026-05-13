@@ -54,15 +54,9 @@ const config: Configuration = {
         },
         // Animation packages
         animation: {
-          test: /[\\/]node_modules[\\/](framer-motion|react-css-transition-replace)/,
+          test: /[\\/]node_modules[\\/]framer-motion/,
           name: 'animation',
           priority: 25,
-        },
-        // Radix UI components
-        radix: {
-          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-          name: 'radix',
-          priority: 20,
         },
         // Remaining vendor code
         vendor: {

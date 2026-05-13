@@ -53,7 +53,6 @@ interface D3LayoutProps {
     maxWidth?: string
     height?: string
     showBorder?: boolean
-    className?: string
   }
 }
 
@@ -152,14 +151,7 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
           <ThemeToggle mode={mode} toggle={toggleTheme} />
         </header>
         <main css={vizContainerOuterStyle}>
-          <div
-            css={[
-              vizContainerInnerStyle,
-              vizConfig?.className ? css(vizConfig.className) : undefined,
-            ]}
-          >
-            {children}
-          </div>
+          <div css={vizContainerInnerStyle}>{children}</div>
         </main>
       </div>
     </D3ThemeContext.Provider>
