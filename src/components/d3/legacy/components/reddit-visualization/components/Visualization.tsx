@@ -1,4 +1,4 @@
-import { ChartBar } from 'src/components/ui/icons'
+import { ChartBar, ScatterPlot } from 'src/components/ui/icons'
 import bubbleChart from 'src/static/images/bubble-chart.svg'
 import Tooltip from './Tooltip'
 
@@ -21,10 +21,7 @@ const Visualization = () => {
           />
         </button>
         <button id="scatter-button" type="button">
-          <img
-            src="https://img.icons8.com/metro/26/000000/scatter-plot.png"
-            alt="scatter plot icon"
-          />
+          <ScatterPlot aria-label="Scatter plot" style={{ fontSize: 26 }} />
         </button>
       </div>
       <div id="visualization" />

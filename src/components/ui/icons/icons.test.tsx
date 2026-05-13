@@ -8,6 +8,7 @@ import {
   Moon,
   Sun,
   ChartBar,
+  ScatterPlot,
 } from './index'
 
 const icons = [
@@ -19,6 +20,7 @@ const icons = [
   { name: 'Moon', Icon: Moon, label: 'Dark mode' },
   { name: 'Sun', Icon: Sun, label: 'Light mode' },
   { name: 'ChartBar', Icon: ChartBar, label: 'Bar chart' },
+  { name: 'ScatterPlot', Icon: ScatterPlot, label: 'Scatter plot' },
 ] as const
 
 describe('icons', () => {

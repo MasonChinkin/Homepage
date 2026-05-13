@@ -2,10 +2,12 @@
 // eslint-disable-next-line
 // @ts-nocheck
 import { max, range } from 'd3-array'
+import { axisBottom } from 'd3-axis'
 import { easeQuadIn } from 'd3-ease'
 import { format } from 'd3-format'
-import { scaleBand } from 'd3-scale'
+import { scaleBand, scaleLinear } from 'd3-scale'
 import { select } from 'd3-selection'
+import 'd3-transition'
 import { barMouseMove, barMouseOut } from './tooltip'
 import { interactionTips } from './utils'
 
@@ -20,8 +22,7 @@ export const drawBars = (dataset) => {
     bottom: 100,
   }
 
-  const svg = d3
-    .select('#visualization')
+  const svg = select('#visualization')
     .append('svg')
     .attr('id', 'canvas')
     .attr('width', w + margin.left + margin.right)
@@ -40,8 +41,7 @@ export const drawBars = (dataset) => {
   // ranges
   const x = scaleBand().rangeRound([0, w]).paddingInner(0.05)
 
-  const y = d3
-    .scaleLinear()
+  const y = scaleLinear()
     .range([0, h - margin.top])
     .clamp(true)
 
@@ -111,8 +111,7 @@ export const drawBars = (dataset) => {
     .on('mouseout', barMouseOut)
 
   // x axis
-  const xAxis = d3
-    .axisBottom()
+  const xAxis = axisBottom()
     .scale(x)
     .tickSize(0)
     .tickFormat((d) =>

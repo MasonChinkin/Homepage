@@ -44,7 +44,7 @@ const Header = () => {
   ]
 
   return (
-    <header>
+    <header css={{ viewTransitionName: 'site-header' }}>
       <DesktopContact />
       <MobileContact />
       <section css={styles}>
