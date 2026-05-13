@@ -9,7 +9,7 @@ Personal homepage + portfolio. SPA with a main profile route, an about page, and
 **Stack:**
 
 - Bun (package manager + script runner)
-- React 19 + TypeScript (strict, target ES2022)
+- React 19 + TypeScript (strict, target ES2023)
 - wouter (lightweight router; ~2 KB gz)
 - Rspack with builtin:swc-loader (TS/TSX compilation)
 - @emotion/react for styling — via JSX automatic runtime (`jsxImportSource: "@emotion/react"`), so the `css` prop works in every `.tsx` file without per-file pragmas
@@ -68,7 +68,7 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 
 ### TypeScript
 
-- `strict`, `target: ES2022`, `module: esnext`, `moduleResolution: bundler`.
+- `strict`, `target: ES2023`, `module: esnext`, `moduleResolution: bundler`.
 - Path alias `src/*` → `./src/*`. **Always use absolute `src/...` imports**, never relative (`../..`). Same-folder imports are the only exception (`eslint-plugin-no-relative-import-paths` enforces this).
 - `jsxImportSource: "@emotion/react"` in both `tsconfig.json` and the Rspack swc-loader config so the `css` prop type-checks and compiles automatically.
 - `types: ["vitest/globals", "@cloudflare/workers-types"]` — Vitest globals (`describe`/`it`/`expect`) are available without import.

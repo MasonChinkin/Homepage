@@ -64,7 +64,7 @@ const config: Configuration = {
                 importSource: '@emotion/react',
               },
             },
-            target: 'es2022',
+            target: 'es2023',
           },
         },
       },

@@ -3,6 +3,8 @@ import { format } from 'd3-format'
 import { type GeoGeometryObjects, geoAlbers, geoPath } from 'd3-geo'
 import { type Selection, select, selectAll } from 'd3-selection'
 import { type D3ZoomEvent, zoom as d3Zoom } from 'd3-zoom'
+import { feature } from 'topojson-client'
+import type { Topology, GeometryCollection } from 'topojson-specification'
 
 interface CandidateData {
   candidate: string
@@ -88,10 +90,18 @@ export default function initializeViz() {
 
   csv('/data/congress-map/congress_results_2016.csv').then((rawData) => {
     const data = rawData as unknown as CsvData[]
-    json<CongressGeoJSON>(
-      '/data/congress-map/us_congress_2016_lower_48.json'
-    ).then((json) => {
-      if (!data || !json) return
+    json<Topology>(
+      '/data/congress-map/us_congress_2016_lower_48.topo.json'
+    ).then((topology) => {
+      if (!data || !topology) return
+
+      // Decode TopoJSON → GeoJSON. The mapshaper output uses a single
+      // unnamed object; pick the first one off the topology.
+      const objectName = Object.keys(topology.objects)[0]
+      const json = feature(
+        topology,
+        topology.objects[objectName] as GeometryCollection
+      ) as unknown as CongressGeoJSON
 
       // loop through, merging data with map
       for (let i = 0; i < data.length; i++) {
