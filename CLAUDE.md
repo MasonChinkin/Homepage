@@ -11,7 +11,7 @@ Personal homepage + portfolio. SPA with a main profile route, an about page, and
 - Bun (package manager + script runner)
 - React 19 + TypeScript (strict, target ES2022)
 - wouter (lightweight router; ~2 KB gz)
-- Webpack 5 with esbuild-loader (TS/TSX compilation)
+- Rspack with builtin:swc-loader (TS/TSX compilation)
 - @emotion/react for styling — via JSX automatic runtime (`jsxImportSource: "@emotion/react"`), so the `css` prop works in every `.tsx` file without per-file pragmas
 - D3 v7 submodules (visualizations); page transitions via the View Transitions API (no framer-motion)
 - Vitest + happy-dom + React Testing Library
@@ -20,7 +20,7 @@ Personal homepage + portfolio. SPA with a main profile route, an about page, and
 ## Commands
 
 ```bash
-bun run start            # webpack dev server with HMR (opens browser)
+bun run start            # rspack dev server with HMR (opens browser)
 bun run build            # production build → dist/
 bun run start:functions  # build + wrangler pages dev dist (preview Workers locally)
 bun run analyze          # production build with Rsdoctor analyzer
@@ -60,17 +60,9 @@ Each lazy import unwraps a named `Component` export via `.then((m) => ({ default
 
 ### Build & external modules
 
-Production uses a custom `ImportMapPlugin` (see `webpack-importmap-plugin.ts`, wired in `webpack.prod.ts`) to:
+Everything bundles locally — no CDN externalization. `rspack.config.ts` (prod), `rspack.dev.ts` (dev server), `rspack.analyze.ts` (Rsdoctor). `splitChunks` carves vendor code into named groups (`emotion`, `vendor`, `common`) plus a per-route `d3` cacheGroup (no fixed name, so each viz route gets its own d3 chunk based on submodules it imports).
 
-1. Mark `react`, `react/jsx-runtime`, `react-dom`, and `react-dom/client` as webpack externals.
-2. Generate an `<script type="importmap">` in `index.html` pointing those names at `https://esm.sh/...`.
-3. Inject `<link rel="preload">` tags ordered **after** the import map but **before** module scripts (race-condition-sensitive — see comments in the plugin).
-
-So React/ReactDOM are loaded from a CDN at runtime; D3, framer-motion, @emotion, etc. are bundled. The plugin also intentionally re-orders all `preload`/`modulepreload` tags so the import map is always parsed first — preserve this ordering if you touch the plugin.
-
-`splitChunks` carves vendor code into named groups (`emotion`, `vendor`, `common`) plus a per-route `d3` cacheGroup (no fixed name, so each viz route gets its own d3 chunk based on submodules it imports).
-
-`CopyWebpackPlugin` copies `public/_headers` and `public/data/` into `dist/` during build (the `public/data/` copy is required for D3 visualizations that fetch JSON/CSV at runtime).
+`rspack.CopyRspackPlugin` copies `public/_headers` and `public/data/` into `dist/` during build (the `public/data/` copy is required for D3 visualizations that fetch JSON/CSV at runtime).
 
 The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 
@@ -78,7 +70,7 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 
 - `strict`, `target: ES2022`, `module: esnext`, `moduleResolution: bundler`.
 - Path alias `src/*` → `./src/*`. **Always use absolute `src/...` imports**, never relative (`../..`). Same-folder imports are the only exception (`eslint-plugin-no-relative-import-paths` enforces this).
-- `jsxImportSource: "@emotion/react"` in both `tsconfig.json` and `esbuild-loader` so the `css` prop type-checks and compiles automatically.
+- `jsxImportSource: "@emotion/react"` in both `tsconfig.json` and the Rspack swc-loader config so the `css` prop type-checks and compiles automatically.
 - `types: ["vitest/globals", "@cloudflare/workers-types"]` — Vitest globals (`describe`/`it`/`expect`) are available without import.
 
 ### Testing
@@ -105,4 +97,3 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 - **Don't add a separate `externalizedLibs.ts` or template-variable HTML.** The current externalization story is the `ImportMapPlugin` only.
 - **`public/data/` is part of the runtime contract** — legacy D3 visualizations fetch from `/data/...`. Don't delete or rename without updating the visualization code.
 - **happy-dom limitations** show up most often as missing browser APIs (e.g. `matchMedia`, `ResizeObserver`). Add a mock to `src/test/setup.ts` rather than skipping the test.
-- The `postinstall` script (`rm -rf node_modules/webpack-dev-middleware/node_modules/schema-utils`) is a workaround for the ajv v6 / v8 conflict between ESLint and webpack — don't remove it without re-validating `bun install && bun run start`.
