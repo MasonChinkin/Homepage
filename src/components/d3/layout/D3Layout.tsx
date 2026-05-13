@@ -2,6 +2,7 @@ import { css } from '@emotion/react'
 import { createContext, useContext, useState, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { ArrowLeft, Moon, Sun } from 'src/components/ui/icons'
 
 // Theme Definitions
 export type ThemeMode = 'dark' | 'light'
@@ -145,7 +146,7 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
             onClick={() => navigate('/d3')}
             type="button"
           >
-            <i className="fas fa-arrow-left" /> Back
+            <ArrowLeft aria-label="Back" /> Back
           </button>
           <h1 css={titleStyle}>{title}</h1>
           <ThemeToggle mode={mode} toggle={toggleTheme} />
@@ -215,13 +216,17 @@ const ThemeToggle = ({
           marginLeft: mode === 'dark' ? '24px' : '0px',
         }}
       >
-        <i
-          className={mode === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}
-          style={{
-            fontSize: '12px',
-            color: mode === 'dark' ? '#333' : '#FDB813',
-          }}
-        />
+        {mode === 'dark' ? (
+          <Moon
+            aria-label="Dark mode"
+            style={{ fontSize: '12px', color: '#333' }}
+          />
+        ) : (
+          <Sun
+            aria-label="Light mode"
+            style={{ fontSize: '12px', color: '#FDB813' }}
+          />
+        )}
       </motion.div>
     </div>
   )

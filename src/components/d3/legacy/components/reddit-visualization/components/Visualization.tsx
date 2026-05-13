@@ -1,3 +1,4 @@
+import { ChartBar } from 'src/components/ui/icons'
 import bubbleChart from 'src/static/images/bubble-chart.svg'
 import Tooltip from './Tooltip'
 
@@ -6,7 +7,11 @@ const Visualization = () => {
     <section className="visualization-container">
       <div className="visualization-options">
         <button id="bar-button" type="button">
-          <i className="far fa-chart-bar" />
+          <ChartBar
+            aria-label="Bar chart"
+            className="bar-chart-icon"
+            style={{ fontSize: 28 }}
+          />
         </button>
         <button id="bubble-button" type="button">
           <img

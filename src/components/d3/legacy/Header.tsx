@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { LongArrowLeft } from 'src/components/ui/icons'
 
 type HeaderProps = { title: string }
 
@@ -13,7 +14,7 @@ const Header = ({ title }: HeaderProps) => {
         onClick={() => navigate('/d3')}
         type="button"
       >
-        <i className="fas fa-long-arrow-alt-left" /> Back
+        <LongArrowLeft aria-label="Back" /> Back
       </button>
     </header>
   )
