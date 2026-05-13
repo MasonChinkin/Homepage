@@ -75,7 +75,7 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
     transition: 'background-color 0.3s ease, color 0.3s ease',
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: "'Roboto', sans-serif",
+    fontFamily: 'inherit',
   })
 
   const headerStyle = css({

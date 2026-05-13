@@ -133,7 +133,12 @@ const globalStyles = css`
   html {
     box-sizing: border-box;
     background-color: ${colors.background};
-    font-family: sans-serif, roboto;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
   }
 
   *,
