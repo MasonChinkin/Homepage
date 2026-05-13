@@ -10,10 +10,10 @@ Personal homepage + portfolio. SPA with a main profile route, an about page, and
 
 - Bun (package manager + script runner)
 - React 19 + TypeScript (strict, target ES2022)
-- React Router v7
+- wouter (lightweight router; ~2 KB gz)
 - Webpack 5 with esbuild-loader (TS/TSX compilation)
 - @emotion/react for styling — via JSX automatic runtime (`jsxImportSource: "@emotion/react"`), so the `css` prop works in every `.tsx` file without per-file pragmas
-- D3 v7 (visualizations) and framer-motion (page transitions)
+- D3 v7 submodules (visualizations); page transitions via the View Transitions API (no framer-motion)
 - Vitest + happy-dom + React Testing Library
 - Cloudflare Pages + Workers
 
@@ -41,15 +41,14 @@ Run a single test file: `bun run test -- src/path/to/Foo.test.tsx`. Filter by na
 
 ### Routing — two layers
 
-`src/Root.tsx` defines a `createBrowserRouter` with React Router v7 **lazy routes**. Each lazy chunk's module is expected to export a named `Component` (this is the v7 lazy-route contract, NOT a default export):
+`src/Root.tsx` uses wouter's `<Switch>` + `<Route>` with `React.lazy` and `Suspense`:
 
-- `/*` → `src/components/Profile.tsx` (the main site)
-- `/reddit-visualization`, `/budget-sankey`, `/syria-network`, `/force-cluster`, `/congress-map`, `/gdp-growth` → `src/components/d3/legacy/*` (each exports `Component`)
-- `/d3/template` → `src/components/d3/template/D3Template`
+- `/reddit-visualization`, `/budget-sankey`, `/syria-network`, `/force-cluster`, `/congress-map`, `/gdp-growth`, `/d3/template` → `src/components/d3/...`
+- catch-all → `src/components/Profile.tsx` (the main site)
 
-`Profile.tsx` then defines the inner site routes (`/`, `/about`, `/d3`, with `/*` redirecting to `/`) and wraps them in framer-motion's `AnimatePresence` / `motion.div` for a ~300ms fade between pages keyed on `location.pathname`. It is NOT using `react-css-transition-replace` or any SCSS transition.
+Each lazy import unwraps a named `Component` export via `.then((m) => ({ default: m.Component }))` so `React.lazy` sees a default export. (This contract was inherited from React Router v7 lazy routes; it's preserved.) A new lazy-loaded route file must `export const Component = ...`.
 
-**Implication:** A new lazy-loaded route file must `export const Component = ...`. A regular nested component used inside `Profile` can use a default export. Don't change this without updating the matching `lazy()` call.
+`Profile.tsx` then defines the inner site routes (`/`, `/about`, `/d3`, with a catch-all `<Redirect to="/" />`). Page transitions use the View Transitions API: `Header.tsx`'s custom `NavLink` wraps `setLocation()` in `document.startViewTransition()`, and `GlobalStyles.tsx` defines 300 ms `::view-transition-old(root)` / `::view-transition-new(root)` cross-fade keyframes. Unsupported browsers fall back to instant navigation; `prefers-reduced-motion` disables the fade.
 
 ### Styling
 
@@ -69,7 +68,7 @@ Production uses a custom `ImportMapPlugin` (see `webpack-importmap-plugin.ts`, w
 
 So React/ReactDOM are loaded from a CDN at runtime; D3, framer-motion, @emotion, etc. are bundled. The plugin also intentionally re-orders all `preload`/`modulepreload` tags so the import map is always parsed first — preserve this ordering if you touch the plugin.
 
-`splitChunks` carves vendor code into named groups (`emotion`, `router`, `d3`, `animation`, `radix`, `vendor`, `common`) for caching.
+`splitChunks` carves vendor code into named groups (`emotion`, `vendor`, `common`) plus a per-route `d3` cacheGroup (no fixed name, so each viz route gets its own d3 chunk based on submodules it imports).
 
 `CopyWebpackPlugin` copies `public/_headers` and `public/data/` into `dist/` during build (the `public/data/` copy is required for D3 visualizations that fetch JSON/CSV at runtime).
 
@@ -86,7 +85,7 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 
 - Vitest with `happy-dom` (lightweight; not a full browser DOM).
 - `src/test/setup.ts` imports `@testing-library/jest-dom` and **mocks `window.matchMedia`** — happy-dom doesn't implement it, and `src/utils/device.ts` hooks call it. Don't remove this mock.
-- Shared helper: `src/test/renderWithRouter.tsx` wraps a tree in a `MemoryRouter` for component tests.
+- Shared helper: `src/test/renderWithRouter.tsx` wraps a tree in wouter's `<Router>` (using `memoryLocation` from `wouter/memory-location`) for component tests. Accepts an optional `initialEntries: string[]` for setting the starting path.
 - Co-locate tests as `Foo.test.tsx` next to `Foo.tsx`.
 - For tests that touch real browser APIs not in happy-dom, use `bun run test:browser` (Chrome via `@vitest/browser`).
 
@@ -96,7 +95,7 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
   - Function components **must** be arrow functions (`react/function-component-definition`).
   - `no-relative-import-paths/no-relative-import-paths` errors on any `../` import except same-folder.
   - `no-console` warns; `@typescript-eslint/no-explicit-any` warns.
-- Prettier (`.prettierrc`): no semicolons, single quotes, trailing commas `es5`, tab width 2. Import ordering via `@trivago/prettier-plugin-sort-imports`: `react` → `react-router-dom` → third-party → relative.
+- Prettier (`.prettierrc`): no semicolons, single quotes, trailing commas `es5`, tab width 2. Import ordering via `@trivago/prettier-plugin-sort-imports`: `react` → third-party → relative.
 - Pre-commit: Husky → **lint-staged** (`.lintstagedrc.json`) → `eslint --fix` + `prettier --write` on staged `.ts/.tsx`, prettier on staged `.json/.md`. Commits are blocked on lint errors.
 
 ## Notes / gotchas
