@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import { createContext, useContext, useState, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
 import { ArrowLeft, Moon, Sun } from 'src/components/ui/icons'
 
 // Theme Definitions
@@ -191,9 +190,7 @@ const ThemeToggle = ({
         },
       })}
     >
-      <motion.div
-        layout
-        transition={{ type: 'spring', stiffness: 700, damping: 30 }}
+      <div
         css={css({
           width: '22px',
           height: '22px',
@@ -203,6 +200,10 @@ const ThemeToggle = ({
           justifyContent: 'center',
           alignItems: 'center',
           boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+          transition: 'margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+          '@media (prefers-reduced-motion: reduce)': {
+            transition: 'none',
+          },
         })}
         style={{
           marginLeft: mode === 'dark' ? '24px' : '0px',
@@ -219,7 +220,7 @@ const ThemeToggle = ({
             style={{ fontSize: '12px', color: '#FDB813' }}
           />
         )}
-      </motion.div>
+      </div>
     </div>
   )
 }

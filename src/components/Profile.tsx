@@ -1,6 +1,5 @@
 import React from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Background from './Background'
 import About from './about/About'
 import Header from './header/Header'
@@ -20,32 +19,15 @@ export const Component = () => {
     { path: '/*', element: <Navigate to="/" /> },
   ]
 
-  const location = useLocation()
-
   return (
     <>
       <Background />
       <Header />
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={location.pathname}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Routes location={location}>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={route.element}
-              />
-            ))}
-          </Routes>
-        </motion.div>
-      </AnimatePresence>
+      <Routes>
+        {routes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
+      </Routes>
     </>
   )
 }

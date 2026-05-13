@@ -55,12 +55,6 @@ const config: Configuration = {
           reuseExistingChunk: true,
           enforce: true,
         },
-        // Animation packages
-        animation: {
-          test: /[\\/]node_modules[\\/]framer-motion/,
-          name: 'animation',
-          priority: 25,
-        },
         // Remaining vendor code
         vendor: {
           test: /[\\/]node_modules[\\/]/,

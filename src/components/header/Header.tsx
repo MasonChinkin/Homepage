@@ -25,17 +25,17 @@ const Header = () => {
       <DesktopContact />
       <MobileContact />
       <section css={styles}>
-        <NavLink to="/">
+        <NavLink to="/" viewTransition>
           {({ isActive }) => (
             <span css={[navLink, isActive && navLinkSelected]}>Home</span>
           )}
         </NavLink>
-        <NavLink to="/about">
+        <NavLink to="/about" viewTransition>
           {({ isActive }) => (
             <span css={[navLink, isActive && navLinkSelected]}>About</span>
           )}
         </NavLink>
-        <NavLink to="/d3">
+        <NavLink to="/d3" viewTransition>
           {({ isActive }) => (
             <span css={[navLink, isActive && navLinkSelected]}>
               D3 Projects
