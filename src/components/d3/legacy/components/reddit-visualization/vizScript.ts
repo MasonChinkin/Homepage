@@ -1,7 +1,7 @@
 // This is early career code. Plz don't judge :)
 // eslint-disable-next-line
 // @ts-nocheck
-import * as d3 from 'd3'
+import { select } from 'd3-selection'
 import { drawBars } from './utils/bars'
 import { drawBubbles } from './utils/bubbles'
 import { drawScatter } from './utils/scatter'
@@ -15,19 +15,19 @@ const initializeViz = () => {
     el.addEventListener('change', () => sessionStorage.clear())
   })
 
-  d3.select('#subreddit-input')
+  select('#subreddit-input')
     .on('change', () => sessionStorage.clear())
     .on('blur', () => sessionStorage.clear()) // change isn't triggering consistently for some reason
 
-  d3.select('#sort-input').on('change', dateRangeNeeded)
+  select('#sort-input').on('change', dateRangeNeeded)
 
-  d3.select('.submit').on('click', () => visualize(drawBars))
+  select('.submit').on('click', () => visualize(drawBars))
 
-  d3.select('#bar-button').on('click', () => visualize(drawBars))
+  select('#bar-button').on('click', () => visualize(drawBars))
 
-  d3.select('#bubble-button').on('click', () => visualize(drawBubbles))
+  select('#bubble-button').on('click', () => visualize(drawBubbles))
 
-  d3.select('#scatter-button').on('click', () => visualize(drawScatter))
+  select('#scatter-button').on('click', () => visualize(drawScatter))
 }
 
 export default initializeViz

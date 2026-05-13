@@ -1,5 +1,23 @@
-import * as d3 from 'd3'
+import { extent, group, max } from 'd3-array'
+import { axisBottom } from 'd3-axis'
+import { csv } from 'd3-fetch'
+import { format as d3Format } from 'd3-format'
+import {
+  type ScaleBand,
+  type ScaleLinear,
+  scaleBand,
+  scaleLinear,
+} from 'd3-scale'
+import { type Selection, select, selectAll } from 'd3-selection'
+import {
+  type Series,
+  type SeriesPoint,
+  line as d3Line,
+  stack as d3Stack,
+  stackOffsetDiverging,
+} from 'd3-shape'
 import { sliderHorizontal } from 'd3-simple-slider'
+import 'd3-transition'
 import { d3sankey } from './d3sankey'
 import type {
   BudgetDataRow,
@@ -31,19 +49,19 @@ const vizState: VizState = {
 }
 
 // Scale references for highlight function
-let revLineX: d3.ScaleBand<number>
-let spendLineX: d3.ScaleBand<number>
-let lineY: d3.ScaleLinear<number, number>
+let revLineX: ScaleBand<number>
+let spendLineX: ScaleBand<number>
+let lineY: ScaleLinear<number, number>
 
 // D3 selections
-let sankeySvg: d3.Selection<SVGGElement, unknown, HTMLElement, any>
+let sankeySvg: Selection<SVGGElement, unknown, HTMLElement, any>
 let sankey: ReturnType<typeof d3sankey>
-let node: d3.Selection<SVGGElement, SankeyNode, SVGGElement, unknown>
-let rects: d3.Selection<
+let node: Selection<SVGGElement, SankeyNode, SVGGElement, unknown>
+let rects: Selection<
   SVGRectElement,
-  d3.SeriesPoint<BarDataRow>,
+  SeriesPoint<BarDataRow>,
   SVGGElement,
-  d3.Series<BarDataRow, string>
+  Series<BarDataRow, string>
 >
 
 // Container dimensions
@@ -58,9 +76,9 @@ const initializeViz = () => {
 
   // Load data
   Promise.all([
-    d3.csv('/data/budget-sankey/us-budget-sankey-main.csv'),
-    d3.csv('/data/budget-sankey/us-budget-sankey-deficit.csv'),
-    d3.csv('/data/budget-sankey/us-budget-sankey-bars.csv'),
+    csv('/data/budget-sankey/us-budget-sankey-main.csv'),
+    csv('/data/budget-sankey/us-budget-sankey-deficit.csv'),
+    csv('/data/budget-sankey/us-budget-sankey-bars.csv'),
   ]).then(([mainCsv, deficitCsv, barsCsv]) => {
     const mainData = mainCsv as unknown as BudgetDataRow[]
     const deficitData = deficitCsv as unknown as DeficitDataRow[]
@@ -88,8 +106,7 @@ const drawBars = (barData: BarDataRow[]) => {
     barsContainer.offsetWidth - barsMargin.left - barsMargin.right
   const barsHeight = 80 - barsMargin.top - barsMargin.bottom
 
-  const barsSvg = d3
-    .select('#barsContainer')
+  const barsSvg = select('#barsContainer')
     .append('svg')
     .attr('width', barsWidth + barsMargin.left + barsMargin.right)
     .attr('height', barsHeight + barsMargin.top + barsMargin.bottom)
@@ -101,21 +118,19 @@ const drawBars = (barData: BarDataRow[]) => {
     d.year = +d.year
   })
 
-  const stack = d3.stack<BarDataRow>()
+  const stack = d3Stack<BarDataRow>()
   const keys = Object.keys(barData[0]).slice(2)
-  stack.keys(keys).offset(d3.stackOffsetDiverging)
+  stack.keys(keys).offset(stackOffsetDiverging)
 
   const series = stack(barData)
 
-  const barsXScale = d3
-    .scaleBand<number>()
+  const barsXScale = scaleBand<number>()
     .domain(barData.map((d) => d.year))
     .range([barsMargin.left, barsWidth - barsMargin.right])
     .paddingInner(0.1)
     .paddingOuter(0.75)
 
-  const barsYScale = d3
-    .scaleLinear()
+  const barsYScale = scaleLinear()
     .domain([
       stackMin(series as Iterable<[number, number]>)!,
       stackMax(series as Iterable<[number, number]>)!,
@@ -142,8 +157,7 @@ const drawBars = (barData: BarDataRow[]) => {
     .attr('year', (d) => d.data.year)
     .attr('width', barsXScale.bandwidth())
     .style('fill', function (d) {
-      return d3.select(this.parentNode as SVGGElement).attr('class') ===
-        'Revenue'
+      return select(this.parentNode as SVGGElement).attr('class') === 'Revenue'
         ? 'green'
         : 'red'
     })
@@ -155,8 +169,7 @@ const drawBars = (barData: BarDataRow[]) => {
       d.data.year === vizState.thisYear ? '2px' : 'none'
     )
 
-  const line = d3
-    .line<BarDataRow>()
+  const line = d3Line<BarDataRow>()
     .x((d) => barsXScale(d.year)! + barsXScale.bandwidth() / 2)
     .y((d) => barsYScale(d.Balance))
 
@@ -197,8 +210,7 @@ const drawSankey = () => {
     sankeyContainer.offsetWidth - sankeyMargin.left - sankeyMargin.right
   const sankeyHeight = 375 - sankeyMargin.top - sankeyMargin.bottom
 
-  sankeySvg = d3
-    .select('#sankeyContainer')
+  sankeySvg = select('#sankeyContainer')
     .append('svg')
     .attr('width', sankeyWidth + sankeyMargin.left + sankeyMargin.right)
     .attr('height', sankeyHeight + sankeyMargin.top + sankeyMargin.bottom)
@@ -217,9 +229,7 @@ const drawSankey = () => {
   sankey.links(vizState.links)
   sankey.layout(1000)
 
-  fontScale.domain(
-    d3.extent(vizState.nodes, (d) => d.value!) as [number, number]
-  )
+  fontScale.domain(extent(vizState.nodes, (d) => d.value!) as [number, number])
 
   sankeySvg
     .append('g')
@@ -335,9 +345,7 @@ const updateSankey = () => {
   sankey.links(vizState.links)
   sankey.layout(1000)
   sankey.relayout()
-  fontScale.domain(
-    d3.extent(vizState.nodes, (d) => d.value!) as [number, number]
-  )
+  fontScale.domain(extent(vizState.nodes, (d) => d.value!) as [number, number])
 
   sankeySvg
     .selectAll('.link')
@@ -396,16 +404,16 @@ const updateSankey = () => {
 }
 
 const drawDeficit = () => {
-  d3.selectAll('.deficit').remove()
-  d3.selectAll('.deficitLabel').remove()
+  selectAll('.deficit').remove()
+  selectAll('.deficitLabel').remove()
 
-  const barHeight = +d3.select('rect[key=Spending]').attr('height')
-  const barVal = +d3.select('rect[key=Spending]').attr('value')
+  const barHeight = +select('rect[key=Spending]').attr('height')
+  const barVal = +select('rect[key=Spending]').attr('value')
   const deficitVal = vizState.thisYearDeficit[0].deficit
 
   const deficitBarRatio = Math.floor((barHeight * deficitVal) / barVal)
 
-  d3.select('rect[key=Spending]')
+  select('rect[key=Spending]')
     .select(function () {
       return (this as SVGRectElement).parentNode as SVGGElement
     })
@@ -449,14 +457,14 @@ const drawLines = () => {
   const revLineData = vizState.lineData.filter((d) => d.type === 'Revenue')
   const spendLineData = vizState.lineData.filter((d) => d.type === 'Spending')
 
-  // D3 v7 migration: replace d3.nest() with d3.group()
+  // D3 v7 migration: replace nest() with group()
   const revDataNested = Array.from(
-    d3.group(revLineData, (d) => d.source),
+    group(revLineData, (d) => d.source),
     ([key, values]) => ({ key, values })
   )
 
   const spendDataNested = Array.from(
-    d3.group(spendLineData, (d) => d.target),
+    group(spendLineData, (d) => d.target),
     ([key, values]) => ({ key, values })
   )
 
@@ -465,36 +473,30 @@ const drawLines = () => {
     linesContainer.offsetWidth - lineMargin.left - lineMargin.right
   const lineHeight = 140 - lineMargin.top - lineMargin.bottom
 
-  const lineSvg = d3
-    .select('#linesContainer')
+  const lineSvg = select('#linesContainer')
     .append('svg')
     .attr('width', lineWidth + lineMargin.left + lineMargin.right)
     .attr('height', lineHeight + lineMargin.top + lineMargin.bottom)
     .append('g')
     .attr('transform', `translate(${lineMargin.left},${lineMargin.top})`)
 
-  revLineX = d3
-    .scaleBand<number>()
+  revLineX = scaleBand<number>()
     .domain(revLineData.map((d) => +d.year))
     .range([lineMargin.left, lineWidth / 2 - lineMargin.middle])
 
-  spendLineX = d3
-    .scaleBand<number>()
+  spendLineX = scaleBand<number>()
     .domain(spendLineData.map((d) => +d.year))
     .range([lineWidth / 2 + lineMargin.middle, lineWidth - lineMargin.right])
 
-  lineY = d3
-    .scaleLinear()
-    .domain([0, d3.max(revLineData, (d) => +d.value)!])
+  lineY = scaleLinear()
+    .domain([0, max(revLineData, (d) => +d.value)!])
     .range([lineHeight - lineMargin.bottom, lineMargin.top])
 
-  const revLine = d3
-    .line<BudgetDataRow>()
+  const revLine = d3Line<BudgetDataRow>()
     .x((d) => revLineX(+d.year)!)
     .y((d) => lineY(+d.value))
 
-  const spendLine = d3
-    .line<BudgetDataRow>()
+  const spendLine = d3Line<BudgetDataRow>()
     .x((d) => spendLineX(+d.year)!)
     .y((d) => lineY(+d.value))
 
@@ -562,15 +564,13 @@ const drawLines = () => {
     .attr('class', 'lineTitle')
     .text('Spending')
 
-  const revXAxis = d3
-    .axisBottom(revLineX)
+  const revXAxis = axisBottom(revLineX)
     .tickValues(
       revLineX.domain().filter((d, i) => i === 0 || i === 49) as number[]
     )
     .tickSize(0)
 
-  const spendXAxis = d3
-    .axisBottom(spendLineX)
+  const spendXAxis = axisBottom(spendLineX)
     .tickValues(
       spendLineX.domain().filter((d, i) => i === 0 || i === 49) as number[]
     )
@@ -597,7 +597,7 @@ const drawLines = () => {
     .attr('y1', lineMargin.top)
     .attr('y2', lineHeight - lineMargin.bottom)
 
-  d3.select('.thisYearLine.rev')
+  select('.thisYearLine.rev')
     .append('text')
     .text(vizState.thisYear)
     .attr('x', revLineX(vizState.thisYear)!)
@@ -612,7 +612,7 @@ const drawLines = () => {
     .attr('y1', lineMargin.top)
     .attr('y2', lineHeight - lineMargin.bottom)
 
-  d3.select('.thisYearLine.spend')
+  select('.thisYearLine.spend')
     .append('text')
     .text(vizState.thisYear)
     .attr('x', spendLineX(vizState.thisYear)!)
@@ -620,20 +620,20 @@ const drawLines = () => {
 }
 
 const updateThisYearLine = (thisYear: number) => {
-  d3.select('.thisYearLine.rev line')
+  select('.thisYearLine.rev line')
     .attr('x1', revLineX(thisYear)!)
     .attr('x2', revLineX(thisYear)!)
 
-  d3.select('.thisYearLine.rev text')
+  select('.thisYearLine.rev text')
     .text(thisYear)
     .attr('x', revLineX(thisYear)!)
     .style('opacity', thisYear === 1968 || thisYear === 2017 ? 0 : 1)
 
-  d3.select('.thisYearLine.spend line')
+  select('.thisYearLine.spend line')
     .attr('x1', spendLineX(thisYear)!)
     .attr('x2', spendLineX(thisYear)!)
 
-  d3.select('.thisYearLine.spend text')
+  select('.thisYearLine.spend text')
     .text(thisYear)
     .attr('x', spendLineX(thisYear)!)
     .style('opacity', thisYear === 1968 || thisYear === 2017 ? 0 : 1)
@@ -649,7 +649,7 @@ const drawSlider = (
     .max(2017)
     .step(1)
     .width(barsContainer.offsetWidth - 62)
-    .tickFormat(d3.format('.4'))
+    .tickFormat(d3Format('.4'))
     .default(2017)
     .on('onchange', (val: number) => {
       vizState.thisYear = val
@@ -658,8 +658,8 @@ const drawSlider = (
     })
     .on('end', (val: number) => {
       vizState.thisYear = val
-      d3.select('.deficit').remove()
-      d3.select('.deficitLabel').remove()
+      select('.deficit').remove()
+      select('.deficitLabel').remove()
       const processed = newData(mainData, deficitData, val)
       vizState.nodes = processed.nodes
       vizState.links = processed.links
@@ -668,8 +668,7 @@ const drawSlider = (
       setTimeout(() => drawDeficit(), newYearTransition)
     })
 
-  const g = d3
-    .select('div#slider')
+  const g = select('div#slider')
     .append('svg')
     .attr('width', barsContainer.offsetWidth)
     .attr('height', 90)
@@ -677,7 +676,7 @@ const drawSlider = (
     .attr('transform', 'translate(30,30)')
 
   g.call(slider as any)
-  d3.selectAll('#slider').style('font-size', 20)
+  selectAll('#slider').style('font-size', 20)
 }
 
 export default initializeViz

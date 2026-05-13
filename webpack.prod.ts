@@ -46,11 +46,14 @@ const config: Configuration = {
           name: 'router',
           priority: 35,
         },
-        // D3 visualization packages (heavy)
+        // D3 submodule packages — per-route chunks (no fixed name; webpack
+        // derives names from the importing chunk so each viz route ships
+        // only the d3 submodules it actually uses)
         d3: {
-          test: /[\\/]node_modules[\\/]d3/,
-          name: 'd3',
+          test: /[\\/]node_modules[\\/]d3[-]/,
           priority: 30,
+          reuseExistingChunk: true,
+          enforce: true,
         },
         // Animation packages
         animation: {

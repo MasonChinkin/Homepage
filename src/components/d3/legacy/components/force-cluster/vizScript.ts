@@ -1,4 +1,10 @@
-import * as d3 from 'd3'
+import { range } from 'd3-array'
+import { forceCollide, forceSimulation, forceX, forceY } from 'd3-force'
+import { scaleOrdinal } from 'd3-scale'
+import { schemeCategory10 } from 'd3-scale-chromatic'
+import { select } from 'd3-selection'
+import { interval as timerInterval } from 'd3-timer'
+import 'd3-transition'
 
 interface NodeData {
   id: string
@@ -21,8 +27,7 @@ export default function initializeViz() {
   const w = container.offsetWidth
   const h = container.offsetHeight
 
-  const svg = d3
-    .select('#container')
+  const svg = select('#container')
     .append('svg')
     .attr('width', w + margin.left + margin.right)
     .attr('height', h + margin.top + margin.bottom)
@@ -33,7 +38,7 @@ export default function initializeViz() {
   const num_nodes = 300
 
   // colors
-  const colors = d3.scaleOrdinal(d3.schemeCategory10)
+  const colors = scaleOrdinal(schemeCategory10)
 
   // durations
   const colorChange = 500 // delay to see color change before transition
@@ -61,7 +66,7 @@ export default function initializeViz() {
   }
 
   // Create node objects
-  const nodeData: NodeData[] = d3.range(num_nodes).map((i) => {
+  const nodeData: NodeData[] = range(num_nodes).map((i) => {
     // evenly split between foci, this randomly selects between 0 and 3
     const max = 3
     const min = 0
@@ -76,18 +81,15 @@ export default function initializeViz() {
     }
   })
 
-  const forceX = d3.forceX<NodeData>((d) => foci[d.choice].x)
-  const forceY = d3.forceY<NodeData>((d) => foci[d.choice].y)
+  const fx = forceX<NodeData>((d) => foci[d.choice].x)
+  const fy = forceY<NodeData>((d) => foci[d.choice].y)
 
-  const collisionForce = d3
-    .forceCollide<NodeData>(node_radius + 1)
-    .iterations(10)
+  const collisionForce = forceCollide<NodeData>(node_radius + 1).iterations(10)
 
-  const simulation = d3
-    .forceSimulation<NodeData>(nodeData)
+  const simulation = forceSimulation<NodeData>(nodeData)
     .velocityDecay(0.4)
-    .force('x', forceX)
-    .force('y', forceY)
+    .force('x', fx)
+    .force('y', fy)
     .force('collide', collisionForce)
     .nodes(nodeData)
     .on('tick', () => node.attr('transform', (d) => `translate(${d.x},${d.y})`))
@@ -101,7 +103,7 @@ export default function initializeViz() {
     .attr('r', (d) => d.r)
     .style('fill', (d) => colors(d.choice.toString()))
 
-  d3.interval(timer, interval)
+  timerInterval(timer, interval)
 
   // Run function periodically to make things move.
   function timer() {

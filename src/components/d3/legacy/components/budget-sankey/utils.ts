@@ -1,4 +1,8 @@
-import * as d3 from 'd3'
+import { max, min } from 'd3-array'
+import { format as d3Format } from 'd3-format'
+import { type ScaleBand, type ScaleLinear, scaleLinear } from 'd3-scale'
+import { select, selectAll } from 'd3-selection'
+import 'd3-transition'
 import type {
   BudgetDataRow,
   DeficitDataRow,
@@ -7,10 +11,10 @@ import type {
 } from './types'
 
 // format variables
-export const formatNumber = d3.format('.1f')
+export const formatNumber = d3Format('.1f')
 export const format = (d: number) => formatNumber(d)
 
-export const fontScale = d3.scaleLinear<number>().range([14, 22])
+export const fontScale = scaleLinear<number>().range([14, 22])
 
 // transition times
 export const newYearTransition = 800
@@ -20,10 +24,10 @@ export const onlyUnique = (value: any, index: number, self: any[]) =>
   self.indexOf(value) === index
 
 export const stackMin = (series: Iterable<[number, number]>) =>
-  d3.min(series, (d) => d[0])!
+  min(series, (d) => d[0])!
 
 export const stackMax = (series: Iterable<[number, number]>) =>
-  d3.max(series, (d) => d[1])!
+  max(series, (d) => d[1])!
 
 export interface ProcessedData {
   nodes: SankeyNode[]
@@ -93,9 +97,9 @@ export interface HighlightParams {
   key: string
   lineData: BudgetDataRow[]
   thisYear: number
-  revLineX: d3.ScaleBand<number>
-  spendLineX: d3.ScaleBand<number>
-  lineY: d3.ScaleLinear<number, number>
+  revLineX: ScaleBand<number>
+  spendLineX: ScaleBand<number>
+  lineY: ScaleLinear<number, number>
 }
 
 export const highlight = (
@@ -103,7 +107,7 @@ export const highlight = (
   params: HighlightParams
 ): void => {
   const { lineData, thisYear, revLineX, spendLineX, lineY } = params
-  const key = d3.select(element).attr('key')
+  const key = select(element).attr('key')
 
   const lineLabelData = lineData.filter(
     (d) =>
@@ -111,60 +115,60 @@ export const highlight = (
       d.target.split(' ').join('_') === key
   )
 
-  d3.selectAll('.line')
+  selectAll('.line')
     .filter(function () {
-      return d3.select(this).attr('key') === key
+      return select(this).attr('key') === key
     })
     .transition()
     .duration(highlightTransition)
     .style('opacity', 1)
 
-  d3.selectAll('.line')
+  selectAll('.line')
     .filter(function () {
-      return d3.select(this).attr('key') !== key
+      return select(this).attr('key') !== key
     })
     .transition()
     .duration(highlightTransition)
     .style('opacity', 0.2)
 
-  d3.selectAll('.link')
+  selectAll('.link')
     .filter(function () {
-      return d3.select(this).attr('key') === key
+      return select(this).attr('key') === key
     })
     .transition()
     .duration(highlightTransition)
     .style('stroke-opacity', 0.7)
 
-  d3.selectAll('.link')
+  selectAll('.link')
     .filter(function () {
-      return d3.select(this).attr('key') !== key
+      return select(this).attr('key') !== key
     })
     .transition()
     .duration(highlightTransition)
     .style('stroke-opacity', 0.4)
 
-  d3.selectAll('.nodeRect')
+  selectAll('.nodeRect')
     .filter(function () {
-      return d3.select(this).attr('key') === key
+      return select(this).attr('key') === key
     })
     .transition()
     .duration(highlightTransition)
     .style('opacity', 1)
 
-  d3.selectAll('.nodeRect')
+  selectAll('.nodeRect')
     .filter(function () {
-      return d3.select(this).attr('key') !== key
+      return select(this).attr('key') !== key
     })
     .transition()
     .duration(highlightTransition)
     .style('opacity', 0.5)
 
   // data points
-  d3.selectAll('.lineLabel').remove()
+  selectAll('.lineLabel').remove()
 
-  d3.selectAll('.lineNode')
+  selectAll('.lineNode')
     .filter(function () {
-      return d3.select(this).attr('key') === key
+      return select(this).attr('key') === key
     })
     .append('g')
     .selectAll('text')

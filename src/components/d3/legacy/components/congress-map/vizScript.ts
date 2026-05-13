@@ -1,4 +1,8 @@
-import * as d3 from 'd3'
+import { csv, json } from 'd3-fetch'
+import { format } from 'd3-format'
+import { type GeoGeometryObjects, geoAlbers, geoPath } from 'd3-geo'
+import { type Selection, select, selectAll } from 'd3-selection'
+import { type D3ZoomEvent, zoom as d3Zoom } from 'd3-zoom'
 
 interface CandidateData {
   candidate: string
@@ -19,7 +23,7 @@ interface FeatureProperties {
 interface CongressFeature {
   type: 'Feature'
   properties: FeatureProperties
-  geometry: d3.GeoGeometryObjects
+  geometry: GeoGeometryObjects
 }
 
 interface CongressGeoJSON {
@@ -46,26 +50,23 @@ export default function initializeViz() {
   const h = container.offsetHeight
 
   // define projection
-  const projection = d3
-    .geoAlbers()
+  const projection = geoAlbers()
     .scale(1000)
     .translate([w / 2, h / 2])
 
   // define zoom behavior
-  const zoom = d3
-    .zoom<SVGSVGElement, unknown>()
+  const zoom = d3Zoom<SVGSVGElement, unknown>()
     .scaleExtent([0.5, 10])
-    .on('zoom', (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => {
+    .on('zoom', (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
       map.style('stroke-width', `${1 / event.transform.k}px`)
       map.attr('transform', event.transform.toString())
     })
 
   // define path
-  const path = d3.geoPath().projection(projection)
+  const path = geoPath().projection(projection)
 
   // create SVG
-  const svg = d3
-    .select('#container')
+  const svg = select('#container')
     .append('svg')
     .attr('width', w)
     .attr('height', h)
@@ -83,11 +84,11 @@ export default function initializeViz() {
     .attr('height', h)
     .attr('opacity', 0)
 
-  let tooltipDiv: d3.Selection<HTMLDivElement, unknown, HTMLElement, unknown>
+  let tooltipDiv: Selection<HTMLDivElement, unknown, HTMLElement, unknown>
 
-  d3.csv('/data/congress-map/congress_results_2016.csv').then((rawData) => {
+  csv('/data/congress-map/congress_results_2016.csv').then((rawData) => {
     const data = rawData as unknown as CsvData[]
-    d3.json<CongressGeoJSON>(
+    json<CongressGeoJSON>(
       '/data/congress-map/us_congress_2016_lower_48.json'
     ).then((json) => {
       if (!data || !json) return
@@ -139,11 +140,10 @@ export default function initializeViz() {
         .attr('class', (d) => d.properties.district || '')
         .attr('name', (d) => d.properties.name || '')
         .on('mouseover', function (event: MouseEvent, d: CongressFeature) {
-          d3.select(this).style('fill', 'orange')
+          select(this).style('fill', 'orange')
 
           // Define the div for the tooltip
-          tooltipDiv = d3
-            .select('body')
+          tooltipDiv = select('body')
             .append('div')
             .attr('class', 'tooltip')
             .style('left', `${event.pageX + 20}px`)
@@ -155,7 +155,7 @@ export default function initializeViz() {
 
           // construct each line of the tooltip
           d.properties.candidates.forEach((el) => {
-            resultsString = `${resultsString}<p>(${el.party})  ${el.candidate}: ${d3.format('.1%')(el.percentage)}</p>`
+            resultsString = `${resultsString}<p>(${el.party})  ${el.candidate}: ${format('.1%')(el.percentage)}</p>`
           })
 
           if (d.properties.name == null) {
@@ -172,9 +172,9 @@ export default function initializeViz() {
             .style('top', `${event.pageY}px`)
         )
         .on('mouseout', function (event: MouseEvent, d: CongressFeature) {
-          d3.select(this).style('fill', stateFill(d))
+          select(this).style('fill', stateFill(d))
 
-          d3.selectAll('.tooltip').exit().remove()
+          selectAll('.tooltip').exit().remove()
 
           tooltipDiv.style('opacity', '0.0')
         })

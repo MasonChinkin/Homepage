@@ -1,4 +1,14 @@
-import * as d3 from 'd3'
+import { type D3DragEvent, drag } from 'd3-drag'
+import { json } from 'd3-fetch'
+import {
+  type ForceLink,
+  forceCenter,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+} from 'd3-force'
+import { select, selectAll } from 'd3-selection'
+import 'd3-transition'
 
 interface NodeData {
   id: string
@@ -32,22 +42,20 @@ export default function initializeViz() {
 
   const greyedOpacity = 0.1
 
-  const svg = d3
-    .select('#container')
+  const svg = select('#container')
     .append('svg')
     .attr('height', h)
     .attr('width', w)
 
-  const simulation = d3
-    .forceSimulation<NodeData>()
+  const simulation = forceSimulation<NodeData>()
     .force(
       'link',
-      d3.forceLink<NodeData, LinkData>().id((d) => d.id)
+      forceLink<NodeData, LinkData>().id((d) => d.id)
     )
-    .force('charge', d3.forceManyBody<NodeData>().strength(-1600))
-    .force('center', d3.forceCenter(w / 2, h * 0.44))
+    .force('charge', forceManyBody<NodeData>().strength(-1600))
+    .force('center', forceCenter(w / 2, h * 0.44))
 
-  d3.json<GraphData>('/data/syria-network/syriaNetwork.json').then((data) => {
+  json<GraphData>('/data/syria-network/syriaNetwork.json').then((data) => {
     if (!data) return
 
     const path = svg
@@ -73,8 +81,7 @@ export default function initializeViz() {
       .on('mouseover', nodeMouseOver)
       .on('mouseout', nodeMouseOut)
       .call(
-        d3
-          .drag<SVGGElement, NodeData>()
+        drag<SVGGElement, NodeData>()
           .on('start', dragStarted)
           .on('drag', dragged)
           .on('end', dragEnded)
@@ -117,9 +124,7 @@ export default function initializeViz() {
       node.attr('transform', (d) => `translate(${d.x},${d.y})`)
     })
 
-    simulation
-      .force<d3.ForceLink<NodeData, LinkData>>('link')!
-      .links(data.links)
+    simulation.force<ForceLink<NodeData, LinkData>>('link')!.links(data.links)
   })
 
   // Legend
@@ -157,7 +162,7 @@ export default function initializeViz() {
     .attr('class', 'labelText')
 
   function dragStarted(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    event: D3DragEvent<SVGGElement, NodeData, NodeData>,
     d: NodeData
   ) {
     if (!event.active) simulation.alphaTarget(0.3).restart()
@@ -166,7 +171,7 @@ export default function initializeViz() {
   }
 
   function dragged(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    event: D3DragEvent<SVGGElement, NodeData, NodeData>,
     d: NodeData
   ) {
     d.fx = Math.max(imageSize / 2, Math.min(w - imageSize / 2, event.x))
@@ -174,7 +179,7 @@ export default function initializeViz() {
   }
 
   function dragEnded(
-    event: d3.D3DragEvent<SVGGElement, NodeData, NodeData>,
+    event: D3DragEvent<SVGGElement, NodeData, NodeData>,
     d: NodeData
   ) {
     if (!event.active) simulation.alphaTarget(0)
@@ -195,20 +200,20 @@ export default function initializeViz() {
     const thisConnections = d.targets
     const thisType = d.id
 
-    d3.selectAll<SVGGElement, NodeData>('.node').each(function (nodeData) {
+    selectAll<SVGGElement, NodeData>('.node').each(function (nodeData) {
       const thisNodeType = nodeData.id
       const isConnected = thisConnections.includes(thisNodeType)
-      const node = d3.select(this)
+      const node = select(this)
 
       if (!isConnected) {
         node.transition().duration(200).style('opacity', greyedOpacity)
       }
     })
 
-    d3.selectAll<SVGPathElement, LinkData>('.link').each(function () {
-      const thisConnects = d3.select(this).attr('thisConnects')
+    selectAll<SVGPathElement, LinkData>('.link').each(function () {
+      const thisConnects = select(this).attr('thisConnects')
       const isConnected = thisConnects.includes(thisType)
-      const path = d3.select(this)
+      const path = select(this)
 
       if (!isConnected) {
         path.transition().duration(200).style('opacity', greyedOpacity)
@@ -217,7 +222,7 @@ export default function initializeViz() {
   }
 
   const nodeMouseOut = function () {
-    d3.selectAll('.node').transition().duration(200).style('opacity', 1)
-    d3.selectAll('.link').transition().duration(200).style('opacity', 1)
+    selectAll('.node').transition().duration(200).style('opacity', 1)
+    selectAll('.link').transition().duration(200).style('opacity', 1)
   }
 }
