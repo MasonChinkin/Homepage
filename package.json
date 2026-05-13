@@ -13,8 +13,7 @@
     "lint": "eslint --fix src",
     "format:check": "prettier --check",
     "format:fix": "prettier --write .",
-    "typecheck": "tsc --noEmit",
-    "postinstall": "rm -rf node_modules/webpack-dev-middleware/node_modules/schema-utils"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

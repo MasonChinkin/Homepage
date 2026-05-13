@@ -9,11 +9,8 @@ describe('public/index.base.html', () => {
     'cdnjs.cloudflare.com',
     'Material+Icons',
     'family=Roboto',
+    'esm.sh',
   ])('does not reference %s', (needle) => {
     expect(html).not.toContain(needle)
-  })
-
-  it('contains exactly one esm.sh dns-prefetch (until Phase 4 removes it)', () => {
-    expect(html.match(/dns-prefetch[^>]*esm\.sh/g) || []).toHaveLength(1)
   })
 })

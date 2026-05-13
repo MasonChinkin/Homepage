@@ -4,8 +4,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import path from 'path'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import { Configuration } from 'webpack'
-import pkg from './package.json'
-import { ImportMapPlugin } from './webpack-importmap-plugin'
 
 const config: Configuration = {
   mode: 'production',
@@ -16,12 +14,7 @@ const config: Configuration = {
     chunkFilename: '[name].[contenthash:8].chunk.js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
-    module: true,
-    chunkFormat: 'module',
     clean: true,
-  },
-  experiments: {
-    outputModule: true,
   },
   cache: {
     type: 'filesystem',
@@ -49,7 +42,7 @@ const config: Configuration = {
           reuseExistingChunk: true,
           enforce: true,
         },
-        // Remaining vendor code
+        // Remaining vendor code (React, ReactDOM, wouter, stylis, etc.)
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
@@ -92,15 +85,14 @@ const config: Configuration = {
   performance: {
     assetFilter: (assetFilename: string) => assetFilename.endsWith('.js'),
   },
-  externalsType: 'module',
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.base.html',
       favicon: './public/fav.ico',
       filename: 'index.html',
       hash: true,
-      scriptLoading: 'module',
       inject: 'head',
+      scriptLoading: 'defer',
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -112,25 +104,6 @@ const config: Configuration = {
         { from: 'public/data', to: 'data' },
       ],
     }),
-    new ImportMapPlugin([
-      { name: 'react', version: pkg.dependencies.react.replace(/^\^/, '') },
-      {
-        name: 'react',
-        version: pkg.dependencies.react.replace(/^\^/, ''),
-        path: 'jsx-runtime',
-      },
-      {
-        name: 'react-dom',
-        version: pkg.dependencies['react-dom'].replace(/^\^/, ''),
-        peers: ['react'],
-      },
-      {
-        name: 'react-dom',
-        version: pkg.dependencies['react-dom'].replace(/^\^/, ''),
-        path: 'client',
-        peers: ['react'],
-      },
-    ]),
     new ForkTsCheckerWebpackPlugin({
       typescript: {
         configFile: path.resolve(__dirname, 'tsconfig.json'),
