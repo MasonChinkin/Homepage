@@ -86,7 +86,8 @@ The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 - `eslint.config.mjs` is the flat config (not extending Airbnb). Key rules:
   - Function components **must** be arrow functions (`react/function-component-definition`).
   - `no-relative-import-paths/no-relative-import-paths` errors on any `../` import except same-folder.
-  - `no-console` warns; `@typescript-eslint/no-explicit-any` warns.
+  - `no-console` errors; `@typescript-eslint/no-explicit-any` errors (legacy D3 viz files at `src/components/d3/legacy/components/**` are exempted from the `any` rule — they have `// @ts-nocheck` headers).
+  - `bun run lint` runs with `--max-warnings 0`; CI fails on any new warning.
 - Prettier (`.prettierrc`): no semicolons, single quotes, trailing commas `es5`, tab width 2. Import ordering via `@trivago/prettier-plugin-sort-imports`: `react` → third-party → relative.
 - Pre-commit: Husky → **lint-staged** (`.lintstagedrc.json`) → `eslint --fix` + `prettier --write` on staged `.ts/.tsx`, prettier on staged `.json/.md`. Commits are blocked on lint errors.
 
