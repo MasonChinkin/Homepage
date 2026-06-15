@@ -1,7 +1,11 @@
 // This is early career code. Plz don't judge :)
 // eslint-disable-next-line
 // @ts-nocheck
-import * as d3 from 'd3'
+import { max, min } from 'd3-array'
+import { axisBottom, axisLeft } from 'd3-axis'
+import { format } from 'd3-format'
+import { scaleLinear, scaleOrdinal, scaleSqrt, scaleTime } from 'd3-scale'
+import { select } from 'd3-selection'
 import { barMouseMove, barMouseOut } from './tooltip'
 import { interactionTips } from './utils'
 
@@ -16,25 +20,22 @@ export function drawScatter(dataset) {
   const h = visualization.offsetHeight
   const margin = 60
 
-  const upsFormat = d3.format('.2s')
+  const upsFormat = format('.2s')
 
   // DEFINE SCALES
-  const xScale = d3
-    .scaleTime()
-    .domain([d3.min(dataset, (d) => new Date(d.createdString)), new Date()])
+  const xScale = scaleTime()
+    .domain([min(dataset, (d) => new Date(d.createdString)), new Date()])
     .range([margin, w - margin - 20])
 
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, d3.max(dataset, (d) => d.numComments)])
+  const yScale = scaleLinear()
+    .domain([0, max(dataset, (d) => d.numComments)])
     .range([h - margin, margin])
 
-  const radiusScale = d3
-    .scaleSqrt()
-    .domain([0, d3.max(dataset, (d) => d.ups)])
+  const radiusScale = scaleSqrt()
+    .domain([0, max(dataset, (d) => d.ups)])
     .range([5, 30])
 
-  const color = d3.scaleOrdinal([
+  const color = scaleOrdinal([
     '#a6cee3',
     '#1f78b4',
     '#b2df8a',
@@ -50,12 +51,11 @@ export function drawScatter(dataset) {
   ])
 
   // DEFINE AXES
-  const xaxis = d3.axisBottom().scale(xScale).ticks(6)
+  const xaxis = axisBottom().scale(xScale).ticks(6)
 
-  const yaxis = d3.axisLeft().scale(yScale)
+  const yaxis = axisLeft().scale(yScale)
 
-  const svg = d3
-    .select('#visualization')
+  const svg = select('#visualization')
     .append('svg')
     .attr('id', 'canvas')
     .attr('width', w)
@@ -116,8 +116,8 @@ export function drawScatter(dataset) {
     .attr('transform', `translate(${w * 0.45},${h - margin * 0.25})`)
 
   // radius
-  const maxUps = d3.max(dataset, (d) => d.ups)
-  const minUps = d3.min(dataset, (d) => d.ups)
+  const maxUps = max(dataset, (d) => d.ups)
+  const minUps = min(dataset, (d) => d.ups)
   const legendData = [maxUps, (maxUps + minUps) / 2, minUps]
 
   const legendCircle = svg
@@ -177,9 +177,9 @@ export function drawScatter(dataset) {
 }
 
 function highlightScatterButton() {
-  d3.select('#bar-button').style('filter', 'none')
+  select('#bar-button').style('filter', 'none')
 
-  d3.select('#bubble-button').style('filter', 'none')
+  select('#bubble-button').style('filter', 'none')
 
-  d3.select('#scatter-button').style('filter', 'brightness(85%)')
+  select('#scatter-button').style('filter', 'brightness(85%)')
 }

@@ -1,36 +1,36 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'wouter'
 import D3Layout from './D3Layout'
 
 it('renders the visualization title', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <D3Layout title="My Chart">
         <div>viz</div>
       </D3Layout>
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByText('My Chart')).toBeInTheDocument()
 })
 
 it('renders a back button', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <D3Layout title="Chart">
         <div />
       </D3Layout>
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByRole('button', { name: /back/i })).toBeInTheDocument()
 })
 
 it('renders a theme toggle button', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <D3Layout title="Chart">
         <div />
       </D3Layout>
-    </MemoryRouter>
+    </Router>
   )
   // The theme toggle has role="button" but no text label; verify two buttons exist
   const buttons = screen.getAllByRole('button')

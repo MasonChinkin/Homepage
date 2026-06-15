@@ -4,145 +4,97 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal homepage built with React and TypeScript. The site is a single-page application with multiple routes (home, about, D3 visualizations) and is deployed on Cloudflare Pages with backend API functions via Cloudflare Workers.
+Personal homepage + portfolio. SPA with a main profile route, an about page, and a D3 project grid; plus several legacy D3 visualization routes. Deployed on Cloudflare Pages with API endpoints as Cloudflare Workers under `functions/api/`.
 
-**Key Technologies:**
+**Stack:**
 
-- React 18.2.0 with TypeScript
-- React Router v6 for client-side routing
-- Webpack 5 for bundling (with esbuild-loader for compilation)
-- @emotion/react for CSS-in-JS styling (use `css` prop, NEVER use @emotion/styled)
-- D3 for data visualization
-- Vitest for unit testing
-- Cloudflare Pages + Workers for deployment
-- Bun for package management and task running
+- Bun (package manager + script runner)
+- React 19 + TypeScript (strict, target ES2023)
+- wouter (lightweight router; ~2 KB gz)
+- Rspack with builtin:swc-loader (TS/TSX compilation)
+- @emotion/react for styling — via JSX automatic runtime (`jsxImportSource: "@emotion/react"`), so the `css` prop works in every `.tsx` file without per-file pragmas
+- D3 v7 submodules (visualizations); page transitions via the View Transitions API (no framer-motion)
+- Vitest + happy-dom + React Testing Library
+- Cloudflare Pages + Workers
 
-## Development Commands
+## Commands
 
-### Common Tasks
+```bash
+bun run start            # rspack dev server with HMR (opens browser)
+bun run build            # production build → dist/
+bun run start:functions  # build + wrangler pages dev dist (preview Workers locally)
+bun run analyze          # production build with Rsdoctor analyzer
 
-- **Start dev server:** `bun run start` (opens browser with HMR)
-- **Run tests:** `bun run test` (single run)
-- **Watch tests:** `bun run test:watch` (continuous mode)
-- **Run single test:** `bun run test -- path/to/test.tsx` (or use `--grep "test name"`)
-- **Browser tests:** `bun run test:browser` (runs in Chrome)
-- **Build production:** `bun run build` (NODE_ENV=production webpack)
-- **Lint & fix:** `bun run lint` (eslint --fix src)
-- **Format check:** `bun run format:check` (prettier)
-- **Format fix:** `bun run format:fix` (prettier --write)
-- **Build & preview Cloudflare Pages:** `bun run start:functions` (wrangler pages dev dist)
-- **Analyze bundle:** `bun run analyze` (Rsdoctor)
+bun run test             # vitest run (single pass)
+bun run test:watch       # vitest watch
+bun run test:browser     # vitest in Chrome (real DOM, not happy-dom)
+bun run test:coverage    # v8 coverage
+
+bun run typecheck        # tsc --noEmit
+bun run lint             # eslint --fix src
+bun run format:fix       # prettier --write .
+```
+
+Run a single test file: `bun run test -- src/path/to/Foo.test.tsx`. Filter by name: `bun run test -- -t "name fragment"`.
 
 ## Architecture
 
-### Routing Structure
+### Routing — two layers
 
-Root routing is in `src/Root.tsx` using lazy-loaded routes:
+`src/Root.tsx` uses wouter's `<Switch>` + `<Route>` with `React.lazy` and `Suspense`:
 
-- `/` and `/\*` → `Profile` component (main profile/portfolio)
-- `/reddit-visualization` → legacy D3 visualization
+- `/reddit-visualization`, `/budget-sankey`, `/syria-network`, `/force-cluster`, `/congress-map`, `/gdp-growth`, `/d3/template` → `src/components/d3/...`
+- catch-all → `src/components/Profile.tsx` (the main site)
 
-The `Profile` component (`src/components/Profile.tsx`) implements the actual site navigation:
+Each lazy import unwraps a named `Component` export via `.then((m) => ({ default: m.Component }))` so `React.lazy` sees a default export. (This contract was inherited from React Router v7 lazy routes; it's preserved.) A new lazy-loaded route file must `export const Component = ...`.
 
-- `/` → Home page (intro + featured projects)
-- `/about` → About page
-- `/d3` → D3 project grid visualization
-
-Routes use React Router v6 lazy loading for code splitting. Page transitions use `react-css-transition-replace` with fade animation (500ms defined in `src/styles/base.scss`).
-
-### Component Structure
-
-```
-src/components/
-├── Profile.tsx           # Main router/layout component
-├── Header.tsx            # Navigation header
-├── Background.tsx        # Animated background
-├── header/              # Header subcomponents
-├── home/                # Home page (Intro + FeaturedProjects)
-├── about/               # About page
-├── projects/            # D3ProjectGrid visualization
-└── d3/legacy/           # Old D3 visualizations
-```
-
-Most components are functional arrow functions exporting as default (eslint rule enforces this). Test files live alongside their components with `.test.tsx` suffix.
+`Profile.tsx` then defines the inner site routes (`/`, `/about`, `/d3`, with a catch-all `<Redirect to="/" />`). Page transitions use the View Transitions API: `Header.tsx`'s custom `NavLink` wraps `setLocation()` in `document.startViewTransition()`, and `GlobalStyles.tsx` defines 300 ms `::view-transition-old(root)` / `::view-transition-new(root)` cross-fade keyframes. Unsupported browsers fall back to instant navigation; `prefers-reduced-motion` disables the fade.
 
 ### Styling
 
-**IMPORTANT: Use @emotion/react with the `css` prop for all component styling. NEVER use @emotion/styled.**
+- @emotion/react with the **`css` prop** and **object syntax**: `<div css={{ color: 'red' }}>` or `css={css({ ... })}`.
+- **Never** use `@emotion/styled` or template-literal `css\`...\`` syntax.
+- Global styles: `src/styles/GlobalStyles.tsx` (rendered once in `src/index.tsx`).
+- Theme constants and shared utility styles: `src/styles/theme.ts`, `src/styles/utilityStyles.ts`, `src/styles/backgroundStyles.ts`.
+- Per-component style modules co-located with their feature folder (e.g. `home/homeStyles.ts`, `header/headerStyles.ts`).
 
-- Primary styling: @emotion/react with `css` prop for component-scoped styles
-- Global styles defined in `src/styles/GlobalStyles.tsx` using Emotion's `Global` component
-- Theme constants exported from `src/styles/theme.ts`
-- Use the `css()` function with object syntax: `<div css={css({ color: 'red' })}>`
-- **DO NOT** use template literal syntax `css\`...\``- always use object syntax`css({ ... })`
-- **DO NOT** use `styled` components from @emotion/styled
+### Build & external modules
 
-### Build & Externals
+Everything bundles locally — no CDN externalization. `rspack.config.ts` (prod), `rspack.dev.ts` (dev server), `rspack.analyze.ts` (Rsdoctor). `splitChunks` carves vendor code into named groups (`emotion`, `vendor`, `common`) plus a per-route `d3` cacheGroup (no fixed name, so each viz route gets its own d3 chunk based on submodules it imports).
 
-Large libraries are externalized (loaded from CDN):
+`rspack.CopyRspackPlugin` copies `public/_headers` and `public/data/` into `dist/` during build (the `public/data/` copy is required for D3 visualizations that fetch JSON/CSV at runtime).
 
-- React, ReactDOM, Bootstrap, D3
-- Configured in `externalizedLibs.ts` with different URLs for dev/prod
-- HTML template in `public/index.base.html` uses template variables like `${reactUrl}` injected by webpack
+The HTML template is `public/index.base.html`; favicon is `public/fav.ico`.
 
-### Webpack Configuration
+### TypeScript
 
-- `webpack.prod.ts` - base production config
-- `webpack.dev.ts` - development override (dev server + HMR)
-- `webpack.analyze.ts` - production + Rsdoctor analyzer
-- Uses esbuild-loader for TS/TSX compilation (fast)
-- Resolves extensions: `.ts`, `.tsx`, `.js`, `.jpg`, `.png`, `.webp`, `.svg`
-- Alias path from tsconfig: `src/*` can be imported directly
-
-### TypeScript Configuration
-
-- Strict mode enabled
-- Target: ES6
-- Module: ESNext (tree-shakeable)
-- Path alias: `src/*` maps to `./src/*`
-- Type checking includes Cloudflare Workers types and Vitest globals
+- `strict`, `target: ES2023`, `module: esnext`, `moduleResolution: bundler`.
+- Path alias `src/*` → `./src/*`. **Always use absolute `src/...` imports**, never relative (`../..`). Same-folder imports are the only exception (`eslint-plugin-no-relative-import-paths` enforces this).
+- `jsxImportSource: "@emotion/react"` in both `tsconfig.json` and the Rspack swc-loader config so the `css` prop type-checks and compiles automatically.
+- `types: ["vitest/globals", "@cloudflare/workers-types"]` — Vitest globals (`describe`/`it`/`expect`) are available without import.
 
 ### Testing
 
-- Vitest with happy-dom environment (lightweight DOM)
-- Tests use globals (no need to import describe/it/expect)
-- Same path alias as main tsconfig
-- Run tests in watch mode during development
+- Vitest with `happy-dom` (lightweight; not a full browser DOM).
+- `src/test/setup.ts` imports `@testing-library/jest-dom` and **mocks `window.matchMedia`** — happy-dom doesn't implement it, and `src/utils/device.ts` hooks call it. Don't remove this mock.
+- Shared helper: `src/test/renderWithRouter.tsx` wraps a tree in wouter's `<Router>` (using `memoryLocation` from `wouter/memory-location`) for component tests. Accepts an optional `initialEntries: string[]` for setting the starting path.
+- Co-locate tests as `Foo.test.tsx` next to `Foo.tsx`.
+- For tests that touch real browser APIs not in happy-dom, use `bun run test:browser` (Chrome via `@vitest/browser`).
 
-### Code Quality
+### Code Style / Linting
 
-**Linting:** ESLint with Airbnb config
+- `eslint.config.mjs` is the flat config (not extending Airbnb). Key rules:
+  - Function components **must** be arrow functions (`react/function-component-definition`).
+  - `no-relative-import-paths/no-relative-import-paths` errors on any `../` import except same-folder.
+  - `no-console` errors; `@typescript-eslint/no-explicit-any` errors (legacy D3 viz files at `src/components/d3/legacy/components/**` are exempted from the `any` rule — they have `// @ts-nocheck` headers).
+  - `bun run lint` runs with `--max-warnings 0`; CI fails on any new warning.
+- Prettier (`.prettierrc`): no semicolons, single quotes, trailing commas `es5`, tab width 2. Import ordering via `@trivago/prettier-plugin-sort-imports`: `react` → third-party → relative.
+- Pre-commit: Husky → **lint-staged** (`.lintstagedrc.json`) → `eslint --fix` + `prettier --write` on staged `.ts/.tsx`, prettier on staged `.json/.md`. Commits are blocked on lint errors.
 
-- Airbnb base + React + hooks + TypeScript
-- No relative imports except same-folder (eslint-plugin-no-relative-import-paths)
-- Always use absolute imports with `src/` prefix
-- Function components must be arrow functions
-- Pre-commit hooks via Husky run: eslint --fix + prettier --write
+## Notes / gotchas
 
-**Formatting:** Prettier with custom imports plugin
-
-- Import order: react, react-router-dom, third-party, relative
-- Trailing commas: es5
-- Tab width: 2
-- No semicolons, single quotes
-
-## Deployment
-
-The site uses **Cloudflare Pages with Workers for API functions**:
-
-```bash
-bun run build          # Builds to dist/
-bun run start:functions # Local preview: wrangler pages dev dist
-```
-
-Static assets in `public/` (favicon, base HTML) are copied into dist during build. API endpoints in `functions/api/` become available at `/api/*` routes.
-
-## Important Notes
-
-- **Path aliases:** Always use `src/` prefix for imports, never relative paths (except same folder)
-- **Lazy routes:** Routes via `Root.tsx` use React Router lazy() for code splitting
-- **Externalized libraries:** React, ReactDOM, Bootstrap, D3 are loaded from CDN in production; don't bundle these
-- **Component exports:** Use default arrow function export (not named)
-- **Styling:** Use @emotion/react with `css()` object syntax (NOT template literals); NEVER use @emotion/styled. Global styles in `GlobalStyles.tsx`, theme constants in `theme.ts`
-- **Testing:** happy-dom is lightweight but not a full browser DOM; use `vitest --browser=chrome` for browser testing if needed
-- **Pre-commit:** Husky hooks auto-fix eslint and prettier issues; commits are blocked if linting fails
+- **`Component` vs default exports:** Route-loaded modules referenced by `Root.tsx`'s `lazy()` (`Profile.tsx`, every `d3/legacy/*` file, `d3/template/D3Template`) must export a named `Component`. Regular UI components (`src/components/ui/Button.tsx`, etc.) use default arrow-function exports.
+- **No Bootstrap, no SCSS pipeline.** Older versions of this README referenced both; they were removed. Styles are entirely Emotion + plain `.ts` style modules.
+- **Don't add a separate `externalizedLibs.ts` or template-variable HTML.** The current externalization story is the `ImportMapPlugin` only.
+- **`public/data/` is part of the runtime contract** — legacy D3 visualizations fetch from `/data/...`. Don't delete or rename without updating the visualization code.
+- **happy-dom limitations** show up most often as missing browser APIs (e.g. `matchMedia`, `ResizeObserver`). Add a mock to `src/test/setup.ts` rather than skipping the test.

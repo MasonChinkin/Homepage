@@ -1,22 +1,31 @@
+import type { ComponentType, SVGProps } from 'react'
+import { Github, LinkedIn, Mail } from 'src/components/ui/icons'
+
 export const email = 'mason.chinkin@gmail.com'
 export const subject = 'Hi Mason'
 export const body = "I would like to hire you and pay you lots o' money!"
 export const mailTo = `mailto:${email}?subject=${subject}&body=${body}`
 
-export const socialLinks = [
+type SocialLink = {
+  href: string
+  label: string
+  Icon: ComponentType<SVGProps<SVGSVGElement>>
+}
+
+export const socialLinks: SocialLink[] = [
   {
     href: 'https://www.linkedin.com/in/mason-chinkin/',
-    icon: 'fab fa-linkedin',
+    Icon: LinkedIn,
     label: 'LinkedIn',
   },
   {
     href: 'https://github.com/MasonChinkin',
-    icon: 'fab fa-github',
+    Icon: Github,
     label: 'Github',
   },
   {
     href: mailTo,
-    icon: 'fas fa-envelope',
+    Icon: Mail,
     label: 'Email',
   },
 ]

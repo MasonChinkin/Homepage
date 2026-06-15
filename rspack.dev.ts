@@ -1,10 +1,10 @@
-import { Configuration } from 'webpack'
-import { merge } from 'webpack-merge'
-import prod from './webpack.prod.ts'
+import type { Configuration } from '@rspack/core'
+import prod from './rspack.config'
 
-const config = merge<
-  Configuration | (Configuration & { devServer: Record<string, unknown> })
->(prod, {
+const config: Configuration & {
+  devServer: Record<string, unknown>
+} = {
+  ...prod,
   mode: 'development',
   devServer: {
     open: true,
@@ -17,6 +17,6 @@ const config = merge<
   watchOptions: {
     ignored: /node_modules/,
   },
-})
+}
 
 export default config

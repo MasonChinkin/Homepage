@@ -52,7 +52,7 @@ export default tseslint.config(
     },
     rules: {
       // Core rules
-      'no-console': 'warn',
+      'no-console': 'error',
       'prefer-const': 'error',
 
       // React rules (Airbnb-inspired)
@@ -80,7 +80,7 @@ export default tseslint.config(
 
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
 
       // Custom rules
       'arrow-body-style': 'off',
@@ -88,6 +88,18 @@ export default tseslint.config(
         'error',
         { allowSameFolder: true },
       ],
+    },
+  },
+  // Legacy D3 vizScripts use `any` extensively (already gated by
+  // `// @ts-nocheck` headers — these files are early-career code preserved
+  // as portfolio history). Don't fight them.
+  {
+    files: [
+      'src/components/d3/legacy/components/**',
+      'src/components/d3/legacy/components/budget-sankey/*.d.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   prettierConfig

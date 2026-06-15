@@ -1,13 +1,13 @@
 import { render } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'wouter'
 
 vi.mock('./components/congress-map/vizScript')
 
 it('renders without crashing', async () => {
   const { Component } = await import('./CongressMap')
   render(
-    <MemoryRouter>
+    <Router>
       <Component />
-    </MemoryRouter>
+    </Router>
   )
 })

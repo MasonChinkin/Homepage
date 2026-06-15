@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import * as d3 from 'd3'
+import { axisBottom, axisLeft } from 'd3-axis'
+import { scaleBand, scaleLinear } from 'd3-scale'
+import { select } from 'd3-selection'
 import D3Layout, { useD3Theme } from 'src/components/d3/layout/D3Layout'
 
 const BarChart = () => {
@@ -32,10 +34,9 @@ const BarChart = () => {
     const height = dimensions.height
 
     // Clear previous
-    d3.select(svgRef.current).selectAll('*').remove()
+    select(svgRef.current).selectAll('*').remove()
 
-    const svg = d3
-      .select(svgRef.current)
+    const svg = select(svgRef.current)
       .attr('width', width)
       .attr('height', height)
 
@@ -53,13 +54,12 @@ const BarChart = () => {
     const innerWidth = width - margin.left - margin.right
     const innerHeight = height - margin.top - margin.bottom
 
-    const x = d3
-      .scaleBand()
+    const x = scaleBand()
       .domain(data.map((d) => d.name))
       .range([0, innerWidth])
       .padding(0.2)
 
-    const y = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0])
+    const y = scaleLinear().domain([0, 100]).range([innerHeight, 0])
 
     const g = svg
       .append('g')
@@ -82,14 +82,14 @@ const BarChart = () => {
     const xAxis = g
       .append('g')
       .attr('transform', `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x))
+      .call(axisBottom(x))
 
     xAxis.selectAll('text').attr('color', theme.text).style('font-size', '14px')
 
     xAxis.selectAll('path, line').attr('stroke', theme.text)
 
     // Y Axis
-    const yAxis = g.append('g').call(d3.axisLeft(y))
+    const yAxis = g.append('g').call(axisLeft(y))
 
     yAxis.selectAll('text').attr('color', theme.text).style('font-size', '14px')
 

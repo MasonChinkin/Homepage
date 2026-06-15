@@ -1,4 +1,5 @@
-import * as d3 from 'd3'
+import { ascending, group, min, sum } from 'd3-array'
+import { interpolateNumber } from 'd3-interpolate'
 
 interface SankeyNode {
   node: number
@@ -96,7 +97,7 @@ export const d3sankey = (): SankeyLayout => {
         const target = d.target as SankeyNode
         const x0 = source.x! + source.dx!
         const x1 = target.x!
-        const xi = d3.interpolateNumber(x0, x1)
+        const xi = interpolateNumber(x0, x1)
         const x2 = xi(curvature)
         const x3 = xi(1 - curvature)
         const y0 = source.y! + d.sy! + d.dy! / 2
@@ -137,8 +138,8 @@ export const d3sankey = (): SankeyLayout => {
   function computeNodeValues() {
     nodes.forEach((node) => {
       node.value = Math.max(
-        d3.sum(node.sourceLinks!, value),
-        d3.sum(node.targetLinks!, value)
+        sum(node.sourceLinks!, value),
+        sum(node.targetLinks!, value)
       )
     })
   }
@@ -186,10 +187,10 @@ export const d3sankey = (): SankeyLayout => {
   }
 
   function computeNodeDepths(iterations: number) {
-    // D3 v7 migration: replace d3.nest() with d3.group()
-    const grouped = d3.group(nodes, (d) => d.x!)
+    // D3 v7 migration: replace nest() with group()
+    const grouped = group(nodes, (d) => d.x!)
     const nodesByBreadth = Array.from(grouped.entries())
-      .sort((a, b) => d3.ascending(a[0], b[0]))
+      .sort((a, b) => ascending(a[0], b[0]))
       .map((d) => d[1])
 
     initializeNodeDepth()
@@ -202,10 +203,8 @@ export const d3sankey = (): SankeyLayout => {
     }
 
     function initializeNodeDepth() {
-      const ky = d3.min(nodesByBreadth, (nodes) => {
-        return (
-          (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value)
-        )
+      const ky = min(nodesByBreadth, (nodes) => {
+        return (size[1] - (nodes.length - 1) * nodePadding) / sum(nodes, value)
       })!
 
       nodesByBreadth.forEach((nodes) => {
@@ -225,8 +224,8 @@ export const d3sankey = (): SankeyLayout => {
         nodes.forEach((node) => {
           if (node.targetLinks!.length) {
             const y =
-              d3.sum(node.targetLinks!, weightedSource) /
-              d3.sum(node.targetLinks!, value)
+              sum(node.targetLinks!, weightedSource) /
+              sum(node.targetLinks!, value)
             node.y! += (y - center(node)) * alpha
           }
         })
@@ -245,8 +244,8 @@ export const d3sankey = (): SankeyLayout => {
           nodes.forEach((node) => {
             if (node.sourceLinks!.length) {
               const y =
-                d3.sum(node.sourceLinks!, weightedTarget) /
-                d3.sum(node.sourceLinks!, value)
+                sum(node.sourceLinks!, weightedTarget) /
+                sum(node.sourceLinks!, value)
               node.y! += (y - center(node)) * alpha
             }
           })

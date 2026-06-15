@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { Router } from 'wouter'
 import FeaturedProjects from './FeaturedProjects'
 
 it('renders featured project items', () => {
   render(
-    <MemoryRouter>
+    <Router>
       <FeaturedProjects />
-    </MemoryRouter>
+    </Router>
   )
   expect(screen.getByText(/reddit visualization/i)).toBeInTheDocument()
 })

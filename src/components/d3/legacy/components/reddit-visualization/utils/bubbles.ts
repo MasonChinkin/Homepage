@@ -1,7 +1,19 @@
 // This is early career code. Plz don't judge :)
 // eslint-disable-next-line
 // @ts-nocheck
-import * as d3 from 'd3'
+import { max, min } from 'd3-array'
+import { drag } from 'd3-drag'
+import {
+  forceCenter,
+  forceCollide,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY,
+} from 'd3-force'
+import { format } from 'd3-format'
+import { scaleOrdinal, scaleSqrt } from 'd3-scale'
+import { select } from 'd3-selection'
 import { barMouseMove, barMouseOut } from './tooltip'
 import { interactionTips } from './utils'
 
@@ -16,19 +28,18 @@ export function drawBubbles(dataset) {
   }
   const nodePadding = 1.5
 
-  const upsFormat = d3.format('.2s')
+  const upsFormat = format('.2s')
 
   // force
   const force = 0.1
 
-  const svg = d3
-    .select('#visualization')
+  const svg = select('#visualization')
     .append('svg')
     .attr('id', 'canvas')
     .attr('width', w)
     .attr('height', h)
 
-  const color = d3.scaleOrdinal([
+  const color = scaleOrdinal([
     '#8dd3c7',
     '#ffffb3',
     '#bebada',
@@ -44,35 +55,30 @@ export function drawBubbles(dataset) {
   ])
 
   // range/scale
-  const radiusScale = d3
-    .scaleSqrt()
-    .domain([0, d3.max(dataset, (d) => d.ups)])
+  const radiusScale = scaleSqrt()
+    .domain([0, max(dataset, (d) => d.ups)])
     .range([6, h / 9]) // 6 for minimum size
 
-  const simulation = d3
-    .forceSimulation()
+  const simulation = forceSimulation()
     .force(
       'forceX',
-      d3
-        .forceX()
+      forceX()
         .strength(force)
         .x(w * 0.5)
     )
     .force(
       'forceY',
-      d3
-        .forceY()
+      forceY()
         .strength(force)
         .y(h * 0.5)
     )
     .force(
       'center',
-      d3
-        .forceCenter()
+      forceCenter()
         .x(w * 0.4)
         .y(h * 0.5)
     )
-    .force('charge', d3.forceManyBody().strength(-30))
+    .force('charge', forceManyBody().strength(-30))
 
   // sort the nodes so that the bigger ones are at the back
   dataset = dataset.sort((a, b) => b.ups - a.ups)
@@ -92,11 +98,7 @@ export function drawBubbles(dataset) {
     .on('mousemove', barMouseMove)
     .on('mouseout', barMouseOut)
     .call(
-      d3
-        .drag()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended)
+      drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)
     )
 
   // update the simulation based on the data
@@ -104,8 +106,7 @@ export function drawBubbles(dataset) {
     .nodes(dataset)
     .force(
       'collide',
-      d3
-        .forceCollide()
+      forceCollide()
         .strength(0.5)
         .radius((d) => radiusScale(d.ups) + nodePadding)
         .iterations(1)
@@ -115,8 +116,8 @@ export function drawBubbles(dataset) {
     })
 
   // radius
-  const maxUps = d3.max(dataset, (d) => d.ups)
-  const minUps = d3.min(dataset, (d) => d.ups)
+  const maxUps = max(dataset, (d) => d.ups)
+  const minUps = min(dataset, (d) => d.ups)
   const legendData = [maxUps, (maxUps + minUps) / 2, minUps]
 
   const legendCircle = svg
@@ -193,9 +194,9 @@ export function drawBubbles(dataset) {
 }
 
 function highlightBubbleButton() {
-  d3.select('#bar-button').style('filter', 'none')
+  select('#bar-button').style('filter', 'none')
 
-  d3.select('#bubble-button').style('filter', 'brightness(85%)')
+  select('#bubble-button').style('filter', 'brightness(85%)')
 
-  d3.select('#scatter-button').style('filter', 'none')
+  select('#scatter-button').style('filter', 'none')
 }

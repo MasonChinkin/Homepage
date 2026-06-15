@@ -3,9 +3,9 @@ import { desktopSocialLinks } from './headerStyles'
 
 const DesktopContact = () => (
   <section css={desktopSocialLinks}>
-    {socialLinks.map(({ href, icon, label }) => (
+    {socialLinks.map(({ href, Icon, label }) => (
       <a key={label} target="_blank" rel="noopener noreferrer" href={href}>
-        <i className={icon} /> <span>{label}</span>
+        <Icon aria-label={label} /> <span>{label}</span>
       </a>
     ))}
   </section>

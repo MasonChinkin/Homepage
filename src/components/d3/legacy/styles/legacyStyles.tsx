@@ -219,7 +219,7 @@ const legacyStyles = css`
       height: 75%;
     }
 
-    .fa-chart-bar {
+    .bar-chart-icon {
       font-size: 28px;
     }
 

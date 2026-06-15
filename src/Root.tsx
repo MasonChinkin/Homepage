@@ -1,59 +1,58 @@
-import {
-  createBrowserRouter,
-  Route,
-  createRoutesFromElements,
-  RouterProvider,
-} from 'react-router-dom'
+import { Suspense, lazy } from 'react'
+import { Route, Switch } from 'wouter'
 
-const Root = () => {
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <>
-        <Route
-          path="/*"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/Profile')}
-        />
-        <Route
-          path="/reddit-visualization"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/RedditVisualization')}
-        />
-        <Route
-          path="/budget-sankey"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/BudgetSankey')}
-        />
-        <Route
-          path="/syria-network"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/SyriaNetwork')}
-        />
-        <Route
-          path="/force-cluster"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/ForceCluster')}
-        />
-        <Route
-          path="/congress-map"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/CongressMap')}
-        />
-        <Route
-          path="/gdp-growth"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/legacy/GdpGrowth')}
-        />
-        <Route
-          path="/d3/template"
-          HydrateFallback={() => null}
-          lazy={() => import('./components/d3/template/D3Template')}
-        />
-      </>
-    )
-  )
+const Profile = lazy(() =>
+  import('./components/Profile').then((m) => ({ default: m.Component }))
+)
+const RedditVisualization = lazy(() =>
+  import('./components/d3/legacy/RedditVisualization').then((m) => ({
+    default: m.Component,
+  }))
+)
+const BudgetSankey = lazy(() =>
+  import('./components/d3/legacy/BudgetSankey').then((m) => ({
+    default: m.Component,
+  }))
+)
+const SyriaNetwork = lazy(() =>
+  import('./components/d3/legacy/SyriaNetwork').then((m) => ({
+    default: m.Component,
+  }))
+)
+const ForceCluster = lazy(() =>
+  import('./components/d3/legacy/ForceCluster').then((m) => ({
+    default: m.Component,
+  }))
+)
+const CongressMap = lazy(() =>
+  import('./components/d3/legacy/CongressMap').then((m) => ({
+    default: m.Component,
+  }))
+)
+const GdpGrowth = lazy(() =>
+  import('./components/d3/legacy/GdpGrowth').then((m) => ({
+    default: m.Component,
+  }))
+)
+const D3Template = lazy(() =>
+  import('./components/d3/template/D3Template').then((m) => ({
+    default: m.Component,
+  }))
+)
 
-  return <RouterProvider router={router} />
-}
+const Root = () => (
+  <Suspense fallback={null}>
+    <Switch>
+      <Route path="/reddit-visualization" component={RedditVisualization} />
+      <Route path="/budget-sankey" component={BudgetSankey} />
+      <Route path="/syria-network" component={SyriaNetwork} />
+      <Route path="/force-cluster" component={ForceCluster} />
+      <Route path="/congress-map" component={CongressMap} />
+      <Route path="/gdp-growth" component={GdpGrowth} />
+      <Route path="/d3/template" component={D3Template} />
+      <Route component={Profile} />
+    </Switch>
+  </Suspense>
+)
 
 export default Root

@@ -1,7 +1,7 @@
 // This is early career code. Plz don't judge :)
 // eslint-disable-next-line
 // @ts-nocheck
-import * as d3 from 'd3'
+import { select } from 'd3-selection'
 
 // function to only include urls that can be previewed (jpgs)
 export function usableUrl(url, preview, thumbnail) {
@@ -23,7 +23,7 @@ export function usableUrl(url, preview, thumbnail) {
 }
 
 export function redraw(dataset, vizType) {
-  d3.select('#visualization').select('svg').remove()
+  select('#visualization').select('svg').remove()
 
   // remove any previous viz
   vizType(dataset)
@@ -63,7 +63,7 @@ export function dateRangeNeeded() {
 
 export function interactionTips(tipText) {
   const xMultiplier = window.innerWidth <= 768 ? 0.3 : 0.5
-  d3.select('#canvas')
+  select('#canvas')
     .append('text')
     .attr('x', visualization.offsetWidth * xMultiplier)
     .attr('y', visualization.offsetHeight * 0.04)

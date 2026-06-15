@@ -60,10 +60,10 @@ const MobileContact = () => {
                 Contact Me
               </h2>
               <div css={mobileSocialLinks}>
-                {socialLinks.map(({ href, icon, label }) => (
+                {socialLinks.map(({ href, Icon, label }) => (
                   <Button key={label} variant="outline-primary">
                     <a target="_blank" rel="noopener noreferrer" href={href}>
-                      <i className={icon} /> <span>{label}</span>
+                      <Icon aria-label={label} /> <span>{label}</span>
                     </a>
                   </Button>
                 ))}

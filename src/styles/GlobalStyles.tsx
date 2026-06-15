@@ -133,7 +133,12 @@ const globalStyles = css`
   html {
     box-sizing: border-box;
     background-color: ${colors.background};
-    font-family: sans-serif, roboto;
+    font-family:
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
   }
 
   *,
@@ -260,6 +265,34 @@ const globalStyles = css`
       ${colors.background} 100%
     );
     overflow: hidden;
+  }
+
+  /* Cross-fade route transitions via the View Transitions API.
+     React Router's <NavLink viewTransition> wraps navigations in
+     document.startViewTransition; the pseudo-elements below replace the
+     previous framer-motion AnimatePresence fade. Unsupported browsers
+     fall back to an instant route change. */
+  ::view-transition-old(root) {
+    animation: 300ms ease-out both fadeOut;
+  }
+  ::view-transition-new(root) {
+    animation: 300ms ease-out both fadeIn;
+  }
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
   }
 `
 

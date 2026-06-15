@@ -1,11 +1,34 @@
-import * as d3 from 'd3'
+import { max, min } from 'd3-array'
+import { axisBottom, axisLeft, axisRight } from 'd3-axis'
+import { csv } from 'd3-fetch'
+import {
+  type ScaleBand,
+  type ScaleLinear,
+  scaleBand,
+  scaleLinear,
+  scaleOrdinal,
+} from 'd3-scale'
+import { schemeCategory10 } from 'd3-scale-chromatic'
+import { select, selectAll } from 'd3-selection'
+import {
+  type Series,
+  type SeriesPoint,
+  curveMonotoneX,
+  line as d3Line,
+  stack as d3Stack,
+  stackOffsetDiverging,
+  stackOrderAscending,
+  stackOrderInsideOut,
+} from 'd3-shape'
+import { timeFormat, timeParse } from 'd3-time-format'
+import 'd3-transition'
 
 type DataRow = {
   year: Date
   [key: string]: number | Date
 }
 
-type StackedDataPoint = d3.SeriesPoint<DataRow>
+type StackedDataPoint = SeriesPoint<DataRow>
 
 export default function initializeViz() {
   // Width and height
@@ -21,8 +44,8 @@ export default function initializeViz() {
   const w = container.offsetWidth
   const h = container.offsetHeight
 
-  const parseTime = d3.timeParse('%Y') // convert strings to dates
-  const formatTime = d3.timeFormat('%Y') // date format
+  const parseTime = timeParse('%Y') // convert strings to dates
+  const formatTime = timeFormat('%Y') // date format
 
   // Function for converting CSV values from strings to Dates and numbers
   const rowConverter = (d: any, i: number, cols: string[]) => {
@@ -38,7 +61,7 @@ export default function initializeViz() {
   }
 
   // colors
-  const colors = d3.scaleOrdinal<string>().range(d3.schemeCategory10)
+  const colors = scaleOrdinal<string>().range(schemeCategory10)
 
   // for back button toggle
   let viewState = 0
@@ -47,13 +70,12 @@ export default function initializeViz() {
   const barTransition = 750
 
   // define stacks
-  const stack = d3.stack<DataRow, string>()
-  const transitionStack = d3.stack<DataRow, string>()
-  const thisStack = d3.stack<DataRow, string>()
+  const stack = d3Stack<DataRow, string>()
+  const transitionStack = d3Stack<DataRow, string>()
+  const thisStack = d3Stack<DataRow, string>()
 
   // create svg
-  const svg = d3
-    .select('#gdp-container')
+  const svg = select('#gdp-container')
     .append('svg')
     .attr('width', w)
     .attr('height', h)
@@ -64,17 +86,14 @@ export default function initializeViz() {
     thisKeys: string[],
     thisSeries: any
 
-  d3.csv('/data/gdp-growth/growth_data.csv', rowConverter).then((data: any) => {
+  csv('/data/gdp-growth/growth_data.csv', rowConverter).then((data: any) => {
     dataset = data as DataRow[]
-    d3.csv('/data/gdp-growth/growth_data_lines.csv', rowConverter).then(
+    csv('/data/gdp-growth/growth_data_lines.csv', rowConverter).then(
       (gdpLineData: any) => {
         gdpLineDataset = gdpLineData as DataRow[]
 
         const keys = data.columns.slice(1) as string[]
-        stack
-          .keys(keys)
-          .offset(d3.stackOffsetDiverging)
-          .order(d3.stackOrderInsideOut)
+        stack.keys(keys).offset(stackOffsetDiverging).order(stackOrderInsideOut)
 
         // data, stacked
         const series = stack(dataset)
@@ -96,46 +115,42 @@ export default function initializeViz() {
     )
   })
 
-  let xScale: d3.ScaleBand<Date>, yScale: d3.ScaleLinear<number, number>
+  let xScale: ScaleBand<Date>, yScale: ScaleLinear<number, number>
 
   function drawGdp(
     data: DataRow[],
-    series: d3.Series<DataRow, string>[],
+    series: Series<DataRow, string>[],
     keys: string[]
   ) {
     // scales
-    xScale = d3
-      .scaleBand<Date>()
+    xScale = scaleBand<Date>()
       .domain(data.map((d) => d.year))
       .range([margin.left, w - margin.right])
       .paddingInner(0.1)
       .paddingOuter(0.75)
 
-    yScale = d3
-      .scaleLinear()
+    yScale = scaleLinear()
       .domain([
-        d3.min(series, stackMin) as number,
-        d3.max(series, stackMax) as number,
+        min(series, stackMin) as number,
+        max(series, stackMax) as number,
       ])
       .range([h - margin.bottom, margin.top])
       .nice()
 
     // Define axes
-    const xAxis = d3
-      .axisBottom(xScale)
+    const xAxis = axisBottom(xScale)
       .tickValues(xScale.domain().filter((d, i) => !(i % 10)))
-      .tickFormat(d3.timeFormat('%Y'))
+      .tickFormat(timeFormat('%Y'))
       .tickSize(0)
 
     // Define right Y axis
-    const yAxisR = d3.axisRight(yScale).ticks(8).tickSizeOuter(0)
+    const yAxisR = axisRight(yScale).ticks(8).tickSizeOuter(0)
 
     // Define left Y axis
-    const yAxisL = d3.axisLeft(yScale).ticks(8).tickSizeOuter(0)
+    const yAxisL = axisLeft(yScale).ticks(8).tickSizeOuter(0)
 
     // Define grey y axis lines
-    const yAxisGrid = d3
-      .axisLeft(yScale)
+    const yAxisGrid = axisLeft(yScale)
       .ticks(8)
       .tickSizeOuter(0)
       .tickSizeInner(-w + margin.left + margin.right)
@@ -163,12 +178,12 @@ export default function initializeViz() {
       .attr('width', xScale.bandwidth())
       .attr('id', 'indivBars')
       .attr('class', function (d) {
-        return 'bar-' + d3.select(this.parentNode as SVGGElement).attr('class')
+        return 'bar-' + select(this.parentNode as SVGGElement).attr('class')
       })
       .style('cursor', 'pointer')
       .on('mousemove', function (event, d) {
         const tooltipType =
-          d3.select(this.parentNode as SVGGElement).attr('class') || ''
+          select(this.parentNode as SVGGElement).attr('class') || ''
 
         tooltipDiv.transition().style('opacity', 0.9)
 
@@ -184,12 +199,12 @@ export default function initializeViz() {
       })
 
     rects.on('click', function (event, d) {
-      thisType = d3.select(this.parentNode as SVGGElement).attr('class') || ''
+      thisType = select(this.parentNode as SVGGElement).attr('class') || ''
 
       viewState++
       toggleBackButton()
 
-      d3.csv(`/data/gdp-growth/growth_data_${thisType}.csv`, rowConverter).then(
+      csv(`/data/gdp-growth/growth_data_${thisType}.csv`, rowConverter).then(
         (thisGdpData: any) => {
           const thisDataset = thisGdpData as DataRow[]
 
@@ -210,32 +225,30 @@ export default function initializeViz() {
 
           transitionStack
             .keys(keys)
-            .offset(d3.stackOffsetDiverging)
-            .order(d3.stackOrderAscending)
+            .offset(stackOffsetDiverging)
+            .order(stackOrderAscending)
 
           const transitionSeries = transitionStack(transitionDataset)
 
           // remove gdp line
-          d3.select('#line')
+          select('#line')
             .transition()
             .duration(barTransition / 2)
             .style('opacity', 0)
 
           // update y scale
-          yScale = d3
-            .scaleLinear()
+          yScale = scaleLinear()
             .domain([
-              (d3.min(transitionSeries, stackMin) as number) - 0.5,
-              (d3.max(transitionSeries, stackMax) as number) + 0.5,
+              (min(transitionSeries, stackMin) as number) - 0.5,
+              (max(transitionSeries, stackMax) as number) + 0.5,
             ])
             .range([h - margin.bottom, margin.top])
             .nice()
 
           // update y axes
-          const yAxisR = d3.axisRight(yScale).ticks(8).tickSizeOuter(0)
-          const yAxisL = d3.axisLeft(yScale).ticks(8).tickSizeOuter(0)
-          const yAxisGrid = d3
-            .axisLeft(yScale)
+          const yAxisR = axisRight(yScale).ticks(8).tickSizeOuter(0)
+          const yAxisL = axisLeft(yScale).ticks(8).tickSizeOuter(0)
+          const yAxisGrid = axisLeft(yScale)
             .ticks(8)
             .tickSizeOuter(0)
             .tickSizeInner(-w + margin.left + margin.right)
@@ -285,8 +298,8 @@ export default function initializeViz() {
           thisKeys = (thisGdpData as any).columns.slice(1) as string[]
           thisStack
             .keys(thisKeys)
-            .offset(d3.stackOffsetDiverging)
-            .order(d3.stackOrderInsideOut)
+            .offset(stackOffsetDiverging)
+            .order(stackOrderInsideOut)
 
           thisSeries = thisStack(thisDataset)
 
@@ -314,12 +327,12 @@ export default function initializeViz() {
             .attr('class', function (d) {
               return (
                 'thisBar-' +
-                d3.select(this.parentNode as SVGGElement).attr('class')
+                select(this.parentNode as SVGGElement).attr('class')
               )
             })
             .on('mousemove', function (event, d) {
               const tooltipType =
-                d3.select(this.parentNode as SVGGElement).attr('class') || ''
+                select(this.parentNode as SVGGElement).attr('class') || ''
 
               tooltipDiv.transition().style('opacity', 0.9)
 
@@ -342,7 +355,7 @@ export default function initializeViz() {
           drawThisLine(gdpLineDataset)
 
           // new legend
-          d3.selectAll('.legend').classed('hidden', true)
+          selectAll('.legend').classed('hidden', true)
           const legendVals = thisKeys
 
           const wLegend = w * 0.55
@@ -406,8 +419,7 @@ export default function initializeViz() {
       .style('opacity', 0.2)
 
     // Define the div for the tooltip
-    const tooltipDiv = d3
-      .select('body')
+    const tooltipDiv = select('body')
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
@@ -415,11 +427,10 @@ export default function initializeViz() {
 
   function drawGdpLine(data: DataRow[]) {
     // define line
-    const line = d3
-      .line<DataRow>()
+    const line = d3Line<DataRow>()
       .x((d) => (xScale(d.year) || 0) + xScale.bandwidth() / 2)
       .y((d) => yScale(d.gdp as number))
-      .curve(d3.curveMonotoneX)
+      .curve(curveMonotoneX)
 
     // create line
     svg
@@ -434,11 +445,10 @@ export default function initializeViz() {
 
   function drawThisLine(data: DataRow[]) {
     // define line
-    const thisLine = d3
-      .line<DataRow>()
+    const thisLine = d3Line<DataRow>()
       .x((d) => (xScale(d.year) || 0) + xScale.bandwidth() / 2)
       .y((d) => yScale(d[thisType] as number))
-      .curve(d3.curveMonotoneX)
+      .curve(curveMonotoneX)
 
     // create line
     svg
@@ -458,7 +468,7 @@ export default function initializeViz() {
 
   function drawBackbutton(
     data: DataRow[],
-    series: d3.Series<DataRow, string>[],
+    series: Series<DataRow, string>[],
     keys: string[]
   ) {
     // Create back button
@@ -485,11 +495,10 @@ export default function initializeViz() {
       toggleBackButton()
 
       // Set y scale back to original domain
-      yScale = d3
-        .scaleLinear()
+      yScale = scaleLinear()
         .domain([
-          d3.min(series, stackMin) as number,
-          d3.max(series, stackMax) as number,
+          min(series, stackMin) as number,
+          max(series, stackMax) as number,
         ])
         .range([h - margin.bottom, margin.top])
         .nice()
@@ -506,13 +515,12 @@ export default function initializeViz() {
           .style('opacity', 0)
       })
 
-      d3.selectAll('#bars').transition().duration(barTransition).remove()
+      selectAll('#bars').transition().duration(barTransition).remove()
 
       // update y axes
-      const yAxisR = d3.axisRight(yScale).ticks(8).tickSizeOuter(0)
-      const yAxisL = d3.axisLeft(yScale).ticks(8).tickSizeOuter(0)
-      const yAxisGrid = d3
-        .axisLeft(yScale)
+      const yAxisR = axisRight(yScale).ticks(8).tickSizeOuter(0)
+      const yAxisL = axisLeft(yScale).ticks(8).tickSizeOuter(0)
+      const yAxisGrid = axisLeft(yScale)
         .ticks(8)
         .tickSizeOuter(0)
         .tickSizeInner(-w + margin.left + margin.right)
@@ -556,14 +564,14 @@ export default function initializeViz() {
       })
 
       // original legend
-      d3.selectAll('.thisLegend').remove()
-      d3.selectAll('.legend').classed('hidden', false)
+      selectAll('.thisLegend').remove()
+      selectAll('.legend').classed('hidden', false)
 
       // remove thisLine
-      d3.select('#thisLine').remove()
+      select('#thisLine').remove()
 
       // original gdp line
-      d3.select('#line')
+      select('#line')
         .transition()
         .duration(barTransition * 2)
         .style('opacity', 1)
@@ -600,7 +608,7 @@ export default function initializeViz() {
 
   function toggleBackButton() {
     // Select the button
-    const backButton = d3.select('#backButton')
+    const backButton = select('#backButton')
 
     // Decide whether to reveal or hide it
     if (viewState === 1) {
@@ -632,12 +640,12 @@ export default function initializeViz() {
     }
   }
 
-  function stackMin(serie: d3.Series<DataRow, string>): number {
-    return d3.min(serie, (d) => d[0]) as number
+  function stackMin(serie: Series<DataRow, string>): number {
+    return min(serie, (d) => d[0]) as number
   }
 
-  function stackMax(serie: d3.Series<DataRow, string>): number {
-    return d3.max(serie, (d) => d[1]) as number
+  function stackMax(serie: Series<DataRow, string>): number {
+    return max(serie, (d) => d[1]) as number
   }
 
   // % label for the y axis

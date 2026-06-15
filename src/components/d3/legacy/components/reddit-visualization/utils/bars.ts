@@ -1,7 +1,13 @@
 // This is early career code. Plz don't judge :)
 // eslint-disable-next-line
 // @ts-nocheck
-import * as d3 from 'd3'
+import { max, range } from 'd3-array'
+import { axisBottom } from 'd3-axis'
+import { easeQuadIn } from 'd3-ease'
+import { format } from 'd3-format'
+import { scaleBand, scaleLinear } from 'd3-scale'
+import { select } from 'd3-selection'
+import 'd3-transition'
 import { barMouseMove, barMouseOut } from './tooltip'
 import { interactionTips } from './utils'
 
@@ -16,8 +22,7 @@ export const drawBars = (dataset) => {
     bottom: 100,
   }
 
-  const svg = d3
-    .select('#visualization')
+  const svg = select('#visualization')
     .append('svg')
     .attr('id', 'canvas')
     .attr('width', w + margin.left + margin.right)
@@ -26,24 +31,23 @@ export const drawBars = (dataset) => {
     .attr('transform', `translate(${margin.left},${margin.top})`)
 
   // ease
-  const barEase = d3.easeQuadIn
+  const barEase = easeQuadIn
   const barTransition = 500
 
   // number/date formats
-  const upsFormat = d3.format('.2s')
-  const maxUps = d3.max(dataset, (d) => d.ups)
+  const upsFormat = format('.2s')
+  const maxUps = max(dataset, (d) => d.ups)
 
   // ranges
-  const x = d3.scaleBand().rangeRound([0, w]).paddingInner(0.05)
+  const x = scaleBand().rangeRound([0, w]).paddingInner(0.05)
 
-  const y = d3
-    .scaleLinear()
+  const y = scaleLinear()
     .range([0, h - margin.top])
     .clamp(true)
 
   // scales
-  x.domain(d3.range(0, dataset.length))
-  y.domain([0, d3.max(dataset, (d) => d.ups)])
+  x.domain(range(0, dataset.length))
+  y.domain([0, max(dataset, (d) => d.ups)])
 
   // BARS
   const bars = svg
@@ -107,8 +111,7 @@ export const drawBars = (dataset) => {
     .on('mouseout', barMouseOut)
 
   // x axis
-  const xAxis = d3
-    .axisBottom()
+  const xAxis = axisBottom()
     .scale(x)
     .tickSize(0)
     .tickFormat((d) =>
@@ -126,7 +129,7 @@ export const drawBars = (dataset) => {
     .attr('dx', '-.8em')
     .attr('dy', '.15em')
 
-  d3.select('.x-axis').select('.domain').style('opacity', 0)
+  select('.x-axis').select('.domain').style('opacity', 0)
 
   // y axis
   svg
@@ -140,11 +143,11 @@ export const drawBars = (dataset) => {
 }
 
 function highlightBarButton() {
-  d3.select('#bar-button').style('filter', 'brightness(85%)')
+  select('#bar-button').style('filter', 'brightness(85%)')
 
-  d3.select('#bubble-button').style('filter', 'none')
+  select('#bubble-button').style('filter', 'none')
 
-  d3.select('#scatter-button').style('filter', 'none')
+  select('#scatter-button').style('filter', 'none')
 }
 
 // useful APIs following json.data.children[j].data

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   featuredProjectItemWrapper,
   featuredProjectItem as featuredProjectItemStyle,
@@ -11,6 +10,7 @@ import {
 import { ProjectType } from 'src/components/projects/projectList'
 import { loadingImg } from 'src/styles/utilityStyles'
 import { useIsPhone } from 'src/utils/device'
+import { Link } from 'wouter'
 
 type FeaturedProjectItemProps = {
   project: ProjectType
@@ -54,7 +54,7 @@ const FeaturedProjectItem = ({ project }: FeaturedProjectItemProps) => {
   if (internalLink) {
     return (
       <figure css={featuredProjectItemWrapper}>
-        <Link to={internalLink} css={featuredProjectItemStyle}>
+        <Link href={internalLink} css={featuredProjectItemStyle}>
           {content}
         </Link>
       </figure>

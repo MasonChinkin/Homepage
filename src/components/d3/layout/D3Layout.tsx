@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import { createContext, useContext, useState, ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { ArrowLeft, Moon, Sun } from 'src/components/ui/icons'
+import { useLocation } from 'wouter'
 
 // Theme Definitions
 export type ThemeMode = 'dark' | 'light'
@@ -52,13 +52,12 @@ interface D3LayoutProps {
     maxWidth?: string
     height?: string
     showBorder?: boolean
-    className?: string
   }
 }
 
 export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
   const [mode, setMode] = useState<ThemeMode>('dark')
-  const navigate = useNavigate()
+  const [, setLocation] = useLocation()
 
   const theme = themes[mode]
 
@@ -74,7 +73,7 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
     transition: 'background-color 0.3s ease, color 0.3s ease',
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: "'Roboto', sans-serif",
+    fontFamily: 'inherit',
   })
 
   const headerStyle = css({
@@ -142,23 +141,16 @@ export const D3Layout = ({ title, children, vizConfig }: D3LayoutProps) => {
         <header css={headerStyle}>
           <button
             css={backButtonStyle}
-            onClick={() => navigate('/d3')}
+            onClick={() => setLocation('/d3')}
             type="button"
           >
-            <i className="fas fa-arrow-left" /> Back
+            <ArrowLeft aria-label="Back" /> Back
           </button>
           <h1 css={titleStyle}>{title}</h1>
           <ThemeToggle mode={mode} toggle={toggleTheme} />
         </header>
         <main css={vizContainerOuterStyle}>
-          <div
-            css={[
-              vizContainerInnerStyle,
-              vizConfig?.className ? css(vizConfig.className) : undefined,
-            ]}
-          >
-            {children}
-          </div>
+          <div css={vizContainerInnerStyle}>{children}</div>
         </main>
       </div>
     </D3ThemeContext.Provider>
@@ -198,9 +190,7 @@ const ThemeToggle = ({
         },
       })}
     >
-      <motion.div
-        layout
-        transition={{ type: 'spring', stiffness: 700, damping: 30 }}
+      <div
         css={css({
           width: '22px',
           height: '22px',
@@ -210,19 +200,27 @@ const ThemeToggle = ({
           justifyContent: 'center',
           alignItems: 'center',
           boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+          transition: 'margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+          '@media (prefers-reduced-motion: reduce)': {
+            transition: 'none',
+          },
         })}
         style={{
           marginLeft: mode === 'dark' ? '24px' : '0px',
         }}
       >
-        <i
-          className={mode === 'dark' ? 'fas fa-moon' : 'fas fa-sun'}
-          style={{
-            fontSize: '12px',
-            color: mode === 'dark' ? '#333' : '#FDB813',
-          }}
-        />
-      </motion.div>
+        {mode === 'dark' ? (
+          <Moon
+            aria-label="Dark mode"
+            style={{ fontSize: '12px', color: '#333' }}
+          />
+        ) : (
+          <Sun
+            aria-label="Light mode"
+            style={{ fontSize: '12px', color: '#FDB813' }}
+          />
+        )}
+      </div>
     </div>
   )
 }
